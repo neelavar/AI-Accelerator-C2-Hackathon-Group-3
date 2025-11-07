@@ -1,0 +1,101 @@
+
+# .gitignore for AI agentic Python projects
+# Adjust entries as needed for your environment. Keep secrets, datasets and model artifacts out of Git.
+
+## Python artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+
+## Virtual environments
+.venv/
+venv/
+env/
+venv*/
+.python-version
+
+## Environment / secrets
+.env
+.env.*
+secrets.yaml
+secrets/*.pem
+*.key
+
+## Packaging
+dist/
+build/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+
+## Testing
+.pytest_cache/
+coverage.xml
+.coverage
+htmlcov/
+
+## Type checkers
+.mypy_cache/
+
+## Caches
+.cache/
+pip-log.txt
+pip-delete-this-directory.txt
+
+## Hugging Face / model caches & artifacts
+# Most HF caches live in ~/.cache — keep local caches ignored too
+.cache/huggingface/
+.cache/huggingface_transformers/
+.hf/
+
+## Large model artifacts (do not commit)
+*.pt
+*.pth
+*.bin
+*.ckpt
+*.safetensors
+*.onnx
+*.tflite
+*.h5
+
+## Datasets / local DBs / logs / artifacts
+/data/
+/datasets/
+*.sqlite
+*.db
+*.db-journal
+/logs/
+*.log
+
+## Local/vector DB folders (examples)
+chromadb/
+chroma-*
+faiss_index/
+vectordb/
+vectors/
+
+## Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+## IDEs and editors
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.swp
+*~
+
+## OS
+.DS_Store
+Thumbs.db
+
+## Docker
+*.env.local
+docker-compose.override.yml
+
+## Node (if present)
+node_modules/
+
+# End of .gitignore
+
