@@ -97,5 +97,10 @@ docker-compose.override.yml
 ## Node (if present)
 node_modules/
 
+
+## Session Logs
+session-logs/
+*log*.md
+
 # End of .gitignore
 
