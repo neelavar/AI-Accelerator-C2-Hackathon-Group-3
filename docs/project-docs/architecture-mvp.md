@@ -68,7 +68,7 @@ graph TD
     subgraph Data & AI Layer
         N((fa:fa-car LLMs));
         O[(ChromaDB on-disk)];
-        P[External APIs: PubMed, openFDA];
+        P[External APIs: PubMed, openFDA, ClinicalTrials.gov, Google Scholar];
     end
 
     %% --- Connections ---
@@ -109,7 +109,7 @@ class N,O,P data;
 	- **Node 2b: Web Researcher (Parallel):**
         - **Role:** Gathers fresh information from external medical sources.
         - **Inputs:** Research Topic.
-        - **Responsibilities:** Query the PubMed and openFDA APIs.
+        - **Responsibilities:** Query the PubMed, openFDA, ClinicalTrials.gov, and Google Scholar APIs.
         - **Outputs:** A collection of text chunks from web APIs.
     - **Node 3: Merge Contexts:**
         - **Role:** A utility node to combine outputs from the parallel retrieval steps.
@@ -146,7 +146,7 @@ class N,O,P data;
 ## 5. Data & Model Architecture (High-level)
 - **Data Sources & Ingestion:**
 	- **User-Provided:** `.txt`, `.pdf`, `.csv` files uploaded via the Streamlit UI and indexed on-demand.
-    - **External:** PubMed and openFDA, queried live via their public REST APIs during the "Retrieve Context" step.
+    - **External:** PubMed, openFDA, ClinicalTrials.gov, and Google Scholar, queried live via their public REST APIs during the "Retrieve Context" step.
 - **Feature Stores / Data Stores:**
 	- **ChromaDB:** Used as the vector store, running in-process and persisting to the local filesystem. It stores the embeddings and content of user-provided documents.
 - **Model Roles & Placement:**
@@ -163,7 +163,7 @@ class N,O,P data;
 - **External Integrations:**
 	- **Ollama:** Interacted with via its OpenAI-compatible API endpoint for local development.
     - **OpenRouter:** Interacted with via its OpenAI-compatible API endpoint for demo/staging.
-    - **PubMed/openFDA:** Standard RESTful API calls using a library like `requests` or `httpx`.
+    - **PubMed/openFDA/ClinicalTrials.gov/Google Scholar:** Standard RESTful API calls using a library like `requests` or `httpx`.
 
 ## 7. Non-functional Architecture Considerations
 - **Scalability Approach:** Not an MVP concern. The system is designed for a single user in a single process.

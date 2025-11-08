@@ -27,13 +27,14 @@ The project will follow a standard `src` layout to keep application code separat
     ├── orchestrator.py    # Defines the LangGraph state and graph
     ├── agents/
     │   ├── __init__.py
+    │   ├── base_agent.py      # Abstract base class for all agents
     │   ├── retriever_agent.py
     │   ├── analysis_agent.py
     │   ├── insight_agent.py
     │   └── report_agent.py
     └── services/
         ├── __init__.py
-        └── external_apis.py # Clients for PubMed and openFDA
+        └── external_apis.py # Clients for PubMed, openFDA, ClinicalTrials.gov, and Google Scholar
 ```
 
 - **`main.py`**: The entry point for the Streamlit application.
