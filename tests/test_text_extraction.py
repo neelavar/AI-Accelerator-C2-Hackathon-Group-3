@@ -35,7 +35,8 @@ class TestTextExtractionService:
         # Extract text
         extracted = extractor.extract_from_file(txt_file)
 
-        assert extracted == content
+        # Note: clean_text() strips trailing whitespace
+        assert extracted == content.strip()
         assert len(extracted) > 0
 
     def test_extract_from_txt_bytes(self, extractor: TextExtractionService) -> None:

@@ -211,8 +211,8 @@ class Hypothesis(BaseModel):
 
     hypothesis_id: UUID = Field(default_factory=uuid4)
     statement: str = Field(..., min_length=10, max_length=1000)
-    reasoning_chain: list[str] = Field(..., min_items=2)
-    supporting_docs: list[UUID] = Field(..., min_items=2)
+    reasoning_chain: list[str] = Field(..., min_length=2)
+    supporting_docs: list[UUID] = Field(..., min_length=2)
     confidence: ConfidenceLevel
     novelty_score: float = Field(ge=0.0, le=1.0)
     generated_at: datetime = Field(default_factory=datetime.utcnow)

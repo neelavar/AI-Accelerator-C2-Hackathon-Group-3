@@ -60,7 +60,7 @@ class TestDocumentModel:
 
     def test_document_content_cannot_be_empty(self) -> None:
         """Test that document content validation rejects empty strings."""
-        with pytest.raises(ValueError, match="content cannot be empty"):
+        with pytest.raises(ValueError, match="String should have at least 1 character"):
             Document(
                 source=DocumentSource.USER_UPLOAD,
                 title="Test",
@@ -249,7 +249,7 @@ class TestHypothesisModel:
 
     def test_hypothesis_requires_min_two_sources(self) -> None:
         """Test that hypotheses require at least 2 supporting documents."""
-        with pytest.raises(ValueError, match="minimum 2 supporting documents"):
+        with pytest.raises(ValueError, match="at least 2 items"):
             Hypothesis(
                 statement="Test hypothesis",
                 reasoning_chain=["Reason 1", "Reason 2"],
@@ -274,8 +274,8 @@ class TestReportModel:
 
         report = Report(
             title="GIST Prevention Research Report",
-            exec_summary="Summary of findings on GIST prevention factors.",
-            detailed_findings="Detailed analysis shows correlation between SSRIs and lower GIST rates.",
+            exec_summary="This comprehensive summary presents key findings on GIST prevention factors and their clinical implications.",
+            detailed_findings="Detailed analysis shows strong correlation between SSRI usage and significantly lower GIST incidence rates. The data suggests a potential protective mechanism through c-KIT pathway modulation.",
             hypotheses=[hyp],
             citations=["Smith et al. (2023)", "Jones et al. (2024)"],
         )
@@ -289,8 +289,8 @@ class TestReportModel:
         """Test markdown export functionality."""
         report = Report(
             title="Test Report",
-            exec_summary="Executive summary here.",
-            detailed_findings="Detailed findings here.",
+            exec_summary="This executive summary provides an overview of the key research findings and their significance in medical research.",
+            detailed_findings="These detailed findings present comprehensive analysis of the research data, including methodology, results, and clinical implications for patient care and treatment protocols.",
             hypotheses=[],
             citations=["Ref 1", "Ref 2"],
         )
