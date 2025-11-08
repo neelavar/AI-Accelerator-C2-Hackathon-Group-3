@@ -1,185 +1,89 @@
-# 🧠 Product Requirements Document (PRD)
-## Project: Multi-Agent AI Deep Researcher (Medical Domain Focus)
-**Author:** Software Product Analyst  
-**Date:** November 2025  
-**Version:** 1.0  
+# Product Requirements Document (PRD)
+
+## 1. Project Overview
+- **Project Name:** Multi-agent AI Deep Researcher (Medical Domain Focus)
+- **Date:** (update as needed)
+- **Prepared by:** Software Product Analyst (derived from `docs/ai-personas/10_software-product-analyst.md`)
+- **Stakeholders:** Medical researchers, clinician-research teams, solution architect, developer team
+- **Summary:** A prototype multi-agent system that ingests user-provided medical documents and curated web sources, performs critical analysis, synthesizes insights, and generates structured research reports to accelerate deep medical research.
+
+## 2. Problem Statement
+Medical researchers currently spend significant time manually searching diverse sources, validating provenance, synthesizing findings, and producing structured reports. There is a need for a reproducible tool that combines private document ingestion with curated web retrieval and multi-agent critical analysis to surface high-value, evidence-backed insights.
+
+## 3. Objectives & Success Criteria
+- Objectives:
+  - Implement four cooperating agents: Contextual Retriever, Critical Analysis, Insight Generator, Report Builder.
+  - Support private ingestion of user documents and retrieval from curated public sources.
+  - Produce explainable insights with citations and reproducible report outputs.
+- Success Criteria (MVP/prototype):
+  - End-to-end demo run produces a final report from topic + uploaded documents.
+  - Retrieval relevance: manual precision@5 >= 0.6 on demo topics (informal check).
+  - Insight quality: at least one novel, plausible hypothesis produced per demo topic (qualitative evaluation).
+  - Report completeness: generated report contains Executive Summary, Methods, Findings, Insights/Hypotheses, Citations.
+
+## 4. User Stories & Acceptance Criteria
+- User Story 1:
+  - As a medical researcher, I want to upload my library of papers and a research topic so that the system returns a concise, cited summary and candidate hypotheses.
+  - Acceptance Criteria:
+    - [ ] Upload accepts PDF/text and indexes documents.
+    - [ ] System returns a ranked list of top-10 relevant documents (mix of user docs + web results).
+    - [ ] Final report includes citations to source ids/URLs.
+
+- User Story 2:
+  - As a researcher, I want contradictions and low-confidence sources flagged so I can prioritize validation.
+  - Acceptance Criteria:
+    - [ ] Analysis agent outputs per-source reliability notes and flags contradictions/uncertainties.
+
+- User Story 3:
+  - As a reviewer, I want hypotheses accompanied by supporting evidence and a short rationale.
+  - Acceptance Criteria:
+    - [ ] Insight agent produces 1–3 candidate hypotheses with supporting source pointers and a brief reasoning trace.
+
+## 5. Key Features & Requirements
+- Feature: Document ingestion & indexing
+  - Requirement: Accept PDF/text uploads, extract plain text, and generate lightweight indexes for retrieval.
+- Feature: Contextual retrieval
+  - Requirement: Query user docs + curated external sources (e.g., PubMed) and rank results.
+- Feature: Critical analysis
+  - Requirement: Summarize individual sources, annotate provenance, and detect contradictions.
+- Feature: Insight generation
+  - Requirement: Synthesize cross-source evidence to propose hypotheses with confidence markers.
+- Feature: Report builder
+  - Requirement: Assemble structured report (Markdown/PDF) with sections and citations.
+
+Non-functional requirements:
+- Demo-friendly latency (steps complete in seconds-to-minutes for small datasets).
+- Explainability: every insight must reference source ids/URLs and include a short rationale.
+- Privacy: user-uploaded documents remain local to demo environment by default.
+
+## 6. User Flow / Process Diagram
+1. User uploads documents (single ZIP or multiple files) and enters a research topic.
+2. Retriever indexes user docs and queries curated web sources.
+3. Analysis agent summarizes and validates sources.
+4. Insight agent synthesizes evidence and proposes hypotheses.
+5. Report Builder compiles the final report for review/download.
+
+## 7. Out of Scope
+- Production-grade crawling or broad web scraping beyond curated sources (e.g., PubMed).
+- Model fine-tuning or production deployments.
+- Full regulatory/compliance support (e.g., HIPAA workflows) for the hackathon MVP.
+
+## 8. Dependencies & Risks
+- Dependencies:
+  - Access to curated medical sources (PubMed APIs or curated datasets).
+  - Text extraction library for PDFs (e.g., pdfminer or similar) if implemented.
+- Risks & Mitigations:
+  - Low-quality or paywalled sources → prioritize curated sources and annotate provenance.
+  - Misleading hypotheses → label as hypotheses with confidence levels and require human validation.
+  - Privacy concerns → keep uploads local and avoid cloud unless approved.
+
+## 9. Backlog (priority)
+1. Create `docs/examples/` with a small sample topic + 1–3 short example papers.
+2. Scaffold prototype package `researcher_agents/` and placeholder scripts for each agent.
+3. Implement ingestion + retrieval POC with sample data.
+4. Implement summarization + validation heuristics.
+5. Implement insight synthesis and basic report templating.
 
 ---
+*Use this file as a living document. For formalization, align with `docs/templates/10_prd-template.md`.*
 
-## 1. Overview
-
-### 1.1 Product Vision
-To empower medical researchers with an intelligent, multi-agent system that automates deep research by ingesting user documents, exploring web sources, performing critical analysis, and generating structured reports — revealing hidden connections and hypotheses that traditional tools overlook.
-
-### 1.2 Problem Statement
-Medical researchers waste significant time manually aggregating, validating, and synthesizing vast medical literature. Existing tools are siloed — handling search, summarization, or citation individually — without holistic reasoning or cross-document insight discovery.
-
-### 1.3 Solution Summary
-The **Multi-Agent AI Deep Researcher** introduces four specialized agents that collaboratively perform domain-specific research:
-1. **Contextual Retriever Agent** – Gathers user and web data.  
-2. **Critical Analysis Agent** – Validates, summarizes, and detects contradictions.  
-3. **Insight Generation Agent** – Builds reasoning chains and hypotheses.  
-4. **Report Builder Agent** – Produces structured, citation-rich reports.  
-
-This agentic workflow reduces research time, surfaces hidden insights, and produces structured outputs suitable for publication or further study.
-
----
-
-## 2. Objectives & Success Metrics
-
-| Objective | Success Criteria |
-|------------|------------------|
-| Automate document ingestion and retrieval | Upload & parse PDFs; retrieve top N relevant medical articles |
-| Generate critical analysis summaries | Summarization accuracy ≥ 80% human-evaluated alignment |
-| Discover non-obvious correlations | At least one plausible hypothesis per topic |
-| Produce structured research reports | Report output with validated citations, summary, and insights |
-| Demonstrate agent collaboration | Four agents complete end-to-end workflow autonomously |
-
----
-
-## 3. Target Users
-
-| User Type | Description | Needs |
-|------------|-------------|--------|
-| **Medical Researchers** | Professionals conducting clinical or academic research | Faster literature review, cross-source insight discovery |
-| **Pharmaceutical Analysts** | Analysts seeking drug repurposing or trend identification | Hypothesis generation and validation |
-| **Clinical Academics / Students** | Learners conducting thesis or publication-oriented studies | Auto-summarization, structured citations |
-
----
-
-## 4. Scope
-
-### 4.1 In Scope (MVP)
-- PDF/Text ingestion for user-provided medical documents  
-- Web data retrieval using domain-specific APIs (e.g., PubMed, Semantic Scholar)  
-- Basic reasoning and hypothesis generation (via chain-of-thought simulation)  
-- End-to-end structured report generation (Markdown/PDF export)  
-
-### 4.2 Out of Scope (Future)
-- Integration with proprietary journal databases  
-- Real-time collaboration or chat interface  
-- Custom model fine-tuning on institutional datasets  
-
----
-
-## 5. Key Features (MVP)
-
-### 5.1 Contextual Retriever Agent
-**Goal:** Ingest and contextualize research material.  
-**Functional Requirements:**
-- [FR-1] Accept multiple file types: `.pdf`, `.txt`, `.docx`  
-- [FR-2] Perform domain-aware search using medical keywords  
-- [FR-3] Retrieve top 10 relevant papers via PubMed API  
-- [FR-4] Store document embeddings for semantic retrieval  
-
-**Acceptance Criteria:**
-- User can upload files and trigger automatic keyword extraction  
-- Agent retrieves at least 5 relevant external sources  
-
----
-
-### 5.2 Critical Analysis Agent
-**Goal:** Validate and synthesize multi-source information.  
-**Functional Requirements:**
-- [FR-5] Summarize core findings from multiple documents  
-- [FR-6] Detect contradictions/conflicts among sources  
-- [FR-7] Assign reliability scores to each source  
-
-**Acceptance Criteria:**
-- Output includes “Summary,” “Contradictions,” and “Reliability” sections  
-- Summaries validated by subject expert feedback  
-
----
-
-### 5.3 Insight Generation Agent
-**Goal:** Propose novel hypotheses and identify hidden links.  
-**Functional Requirements:**
-- [FR-8] Build reasoning chains across cross-domain evidence  
-- [FR-9] Suggest new research hypotheses with supporting rationale  
-- [FR-10] Tag findings with confidence levels (High/Medium/Low)  
-
-**Acceptance Criteria:**
-- At least one hypothesis generated per topic  
-- Each hypothesis includes references and reasoning trail  
-
----
-
-### 5.4 Report Builder Agent
-**Goal:** Generate structured research outputs.  
-**Functional Requirements:**
-- [FR-11] Compile summary, analysis, and insights into a report  
-- [FR-12] Include citations (APA/MLA format)  
-- [FR-13] Export in Markdown or PDF format  
-
-**Acceptance Criteria:**
-- Final report auto-generated and downloadable  
-- Includes clear structure: Abstract → Findings → Hypotheses → References  
-
----
-
-## 6. System Workflow
-
-1. **Input Layer:** User uploads medical documents and enters topic  
-2. **Retrieval Layer:** Contextual Retriever gathers web + local data  
-3. **Analysis Layer:** Critical Analysis Agent summarizes and validates  
-4. **Insight Layer:** Insight Generator forms hypotheses  
-5. **Output Layer:** Report Builder compiles structured research  
-
-```mermaid
-flowchart TD
-    A[User Input] --> B[Contextual Retriever Agent]
-    B --> C[Critical Analysis Agent]
-    C --> D[Insight Generation Agent]
-    D --> E[Report Builder Agent]
-    E --> F[Structured Research Report]
-
-
-7. Technical Requirements
-Area	Requirement
-Model Backend	OpenAI GPT-4/5 API for reasoning & summarization
-Document Parsing	LangChain / PyMuPDF / PDFPlumber
-Retrieval	PubMed API + semantic search via FAISS or ChromaDB
-Frontend (MVP)	Streamlit or Next.js-based simple interface
-Storage	Local vector database for embeddings
-Report Export	Markdown → PDF converter (WeasyPrint / Pandoc)
-8. Example User Flow (Use Case)
-
-Scenario: Researcher exploring “Preventative factors for Gastrointestinal Stromal Tumors (GIST).”
-
-Uploads 50+ GIST research papers
-
-Retriever Agent gathers additional PubMed studies
-
-Analysis Agent flags SSRIs correlation with reduced GIST incidence
-
-Insight Agent connects SSRI off-target kinase inhibition to c-KIT pathway
-
-Report Builder compiles hypothesis report with references
-
-Outcome: Discovery of novel SSRI-GIST relationship hypothesis.
-
-9. Risks & Mitigations
-Risk	Impact	Mitigation
-Overfitting to general web data	Medium	Restrict domain to medical-only APIs
-Inaccurate summarization	High	Add expert feedback validation loop
-Slow retrieval pipeline	Medium	Pre-index uploaded documents
-Ambiguous insights	Medium	Require multi-source evidence before output
-10. Future Enhancements
-
-Domain-adaptive agent tuning using reinforcement feedback
-
-Integration with Zotero / Mendeley for citation syncing
-
-Voice-based research assistant for hands-free exploration
-
-Multi-agent visual dashboard for reasoning trace visualization
-
-11. Deliverables (Hackathon)
-
-Prototype demonstrating end-to-end agent pipeline
-
-MVP UI for document upload and topic entry
-
-Auto-generated structured research report
-
-Example case: GIST SSRIs hypothesis discovery
