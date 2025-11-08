@@ -1,67 +1,67 @@
-# AI-Accelerator-C2-Hackathon-Group-3
+# AI Personas for Augmented Design & Development
 
-This repository contains the Group 3 project for the AI Accelerator Programme (C2 cohort). The goal is to rapidly prototype and iterate on AI agents and agentic systems using an AI-augmented design & development process. Project documentation, architecture notes, templates, and persona definitions live under the `docs/` directory.
+This directory contains a set of AI personas designed to assist and augment various roles throughout the software design and development lifecycle. Each persona encapsulates the expertise, responsibilities, and best practices of a specific role, enabling users to simulate collaboration with virtual experts.
 
-Key points
-- Primary workspace for Group 3 in the AI Accelerator C2 cohort.
-- Project documentation and templates are stored under `docs/` (see `docs/templates` and `docs/ai-personas`).
-- The project follows an AI-augmented workflow: teams should leverage the included AI personas to speed up planning, design, and implementation.
+## Available Personas
 
-NOTE: As development progresses, all project-specific documentation should live in `docs/project-docs/`.
+| Persona | File | Description | Sample Starter Prompt |
+|---|---|---|---|
+| Software Product Analyst | `10_software-product-analyst.md` | Specializes in requirements gathering, market analysis, and feature prioritization. | `Act as a Product Analyst for [product]: define user personas, top user goals, 8 prioritized features with success metrics and rationale.` |
+| Project Manager | `20_project-manager.md` | Guides project planning, task management, and team coordination. | `Act as a Project Manager for a Agentic RAG app: propose milestones, a sprint plan, roles/RACI, key risks, and mitigation steps.` |
+| UX Designer | `31_ux-designer.md` | Focuses on user experience, interface design, and usability best practices. | `Act as a UX Designer: critique this onboarding flow/wireframe, list usability issues, propose UI changes and accessibility fixes.` |
+| Conversational UX Designer | `32_conversational-ux-designer.md` | Expert in designing conversational interfaces and chatbots. | `Design a conversational flow for [use case]: define intents, sample dialogues, slot requirements, fallback handling, and tone guidelines.` |
+| Solution Architect | `40_solution-architect.md` | Provides architectural guidance, system design, and technology selection. | `Propose a solution architecture for [system]: components, data flow, tech choices, deployment pattern, and scaling strategy with trade-offs.` |
+| Python AI Developer | `41_python-ai-developer.md` | Implements AI/ML solutions, writes Python code, and integrates models. | `Implement a Python solution for [ML task]: outline data pipeline, model training snippet, evaluation metrics, and an example inference endpoint.` |
 
-Why this repo exists
-- Provide a shared, structured place to develop agentic prototypes during the hackathon.
-- Encourage disciplined documentation with templates for PRDs, project plans, architecture and technical designs.
-- Promote an AI-augmented workflow by providing curated AI personas that act as role-based assistants (Product Analyst, Project Manager, UX Designer, Solution Architect, Python AI Developer, etc.).
+## How to Leverage AI Personas
 
-Getting started (high-level)
-- Read the AI persona descriptions in `docs/ai-personas/` and the templates in `docs/templates/`.
-- Use the PRD template (`docs/templates/10_prd-template.md`) to capture product requirements for small agent projects.
-- Use the Project Plan template (`docs/templates/20_project-plan-template.md`) to break work into phases and AI-ready tasks.
-- Use the Architecture template (`docs/templates/40_architecture-template.md`) for high-level system design and the Technical Design Document template (`docs/templates/41_technical-design-template.md`) for implementation-level details.
-- A rudimentary Python project scaffold is included as a reference (using `uv` as a minimal example). Developers can use it as a starting point for service components.
+1. **Identify Your Needs:**
+   - Choose the persona(s) relevant to your current phase or challenge (e.g., requirements, UX, architecture, coding).
 
-Leveraging AI Personas
-- The `docs/ai-personas/` folder contains role-based persona files. Treat these as virtual collaborators:
-	- Use the Product Analyst persona to craft clear PRDs and user stories.
-	- Use the Project Manager persona to decompose epics into AI-ready tasks and maintain the project log.
-	- Use the Solution Architect persona when creating the architecture document and making system-level trade-offs.
-	- Use the Python AI Developer persona for coding, model integration, and implementation guidance.
-- Personas are intended to be used interactively: copy suggested prompts or ask tailored questions when planning, designing, reviewing, or coding.
+2. **Consult the Persona:**
+   - Open the corresponding markdown file to review the persona's expertise, typical tasks, and prompts.
+   - Use the suggested prompts to ask questions or request guidance as if consulting a domain expert.
 
-Documentation best-practices
-- Keep docs concise but actionable. Use the templates under `docs/templates/` as the single source of truth.
-- Update the relevant template for each new feature or component (PRD → Project Plan → Architecture → Technical Design → Runbooks).
-- Store examples, payloads, and small fixtures under `docs/examples/` (create as needed).
+3. **Integrate into Workflow:**
+   - During brainstorming, design, or development, refer to personas for:
+     - Best practices
+     - Checklists
+     - Review questions
+     - Recommendations
+   - Use personas in team discussions to simulate expert input or validate decisions.
 
-Contribution guidelines
-- Branches & workflow:
-	- Work from the `develop` branch for development. Direct commits to `develop` are prohibited.
-	- Create feature branches named `feat/<short-name>` or `fix/<short-name>`.
-	- Open a pull request against `develop` when your change is ready for review.
-- Issues & PRs:
-	- Open issues for bugs, tasks, or docs you plan to work on. Tag PRs with the relevant issue number where appropriate.
-	- Keep PRs small and focused. Link to the relevant template (PRD, architecture, etc.) when changing design decisions.
-- Code style & tests:
-	- Follow existing code style in the repo. Add unit tests for new logic where feasible.
-	- For Python services, prefer small, fast unit tests and one integration test for critical flows.
-- Documentation & templates:
-	- Use templates in `docs/templates/` for PRDs, project plans, architecture and technical designs.
-	- Update `docs/ai-personas/` if you create a new persona or improve an existing one.
-- Communication:
-	- If you need clarifications or want to discuss architecture choices, contact the repo owner (see below) or open a discussion issue.
+4. **Iterate and Collaborate:**
+   - Combine insights from multiple personas for cross-functional perspectives.
+   - Adapt and extend personas as your project evolves.
 
-Repository structure (important folders)
-- `docs/ai-personas/` — AI persona definitions and prompts.
-- `docs/templates/` — Documentation templates (PRD, project plan, architecture, TDD).
-- `docs/project-docs/` — Project-specific documentation (use this as your main doc area as the project progresses).
-- `main.py`, `pyproject.toml` — Minimal Python project scaffold (reference).
+## Example Usage
 
-Contact
-- Project lead / maintainer: Prasanna Neelavar — prasanna.neelavar@gmail.com
+- **Design Phase:**
+  - Consult the UX Designer persona for wireframe feedback and usability tips.
+- **Development Phase:**
+  - Ask the Python AI Developer persona for code review or implementation advice.
+- **Project Planning:**
+  - Use the Project Manager persona to structure sprints and manage risks.
 
-License
-- See `LICENSE` for license details.
+## Quality Assurance persona — example prompts
 
-Thanks for contributing — use the personas, stick to the templates, and keep docs actionable. Let's build something useful and iteratively improve it.
+Below are example prompts and a quick runnable example for the Quality Assurance (QA) persona. These can be used verbatim when interacting with the QA persona to get test plans, test skeletons, and triage guidance.
 
+Example prompts
+
+- "You are QA. Given this feature: <paste feature>, produce a P0/P1 test plan and 8 test cases in Gherkin. Target framework: pytest."
+- "Write pytest skeletons for this function: <paste function>. Include parameterized tests for valid/invalid inputs and one assertion per test."
+- "Test output: <paste failing test log>. Summarize likely causes and list three debugging steps."
+
+Quick example
+
+- User: "QA: produce 5 pytest cases for an email validator function."
+- Persona: returns five parametrized pytest cases (valid, invalid, empty, long local-part, internationalized domain), sample inputs, and expected assertions.
+
+## Contributing
+
+Feel free to add new personas or update existing ones to better fit your team's needs. See individual persona files for structure and inspiration.
+
+---
+
+*Empower your team with AI-augmented expertise for faster, smarter, and more collaborative software development!*
