@@ -94,7 +94,7 @@ We will use an **"accumulator" pattern** for managing the `ResearchState` as it 
 - **`src/config.py`:**
     - Manages environment variables (`.env`).
     - Configures LLM clients (OpenAI-compatible API for OpenRouter/Ollama) based on `APP_ENV` (DEV/DEMO).
-    - Provides access to model names (`EMBEDDING_MODEL`, `FAST_MODEL`, `HEAVY_MODEL`).
+    - Provides access to model names (`EMBEDDING_MODEL`, `FAST_MODEL`, `THINKING_MODEL`).
 - **`src/knowledge_base.py`:**
     - **File Ingestion:** Uses `pypdf` for PDF parsing and `unstructured[local-inference]` for robust document parsing (TXT, CSV, etc.).
     - **Embedding Generation:** Interfaces with the configured embedding model (`llm_client.embeddings.create`).
@@ -106,9 +106,9 @@ We will use an **"accumulator" pattern** for managing the `ResearchState` as it 
 - **`src/agents/*.py`:**
     - **`base_agent.py`:** Defines an abstract `BaseAgent` class from which all other agents inherit. It standardizes the agent interface (e.g., an `execute` method) and can contain shared logic for logging or LLM invocation.
     - Each file contains the logic for a major, complex agent node, inheriting from `BaseAgent`.
-    - **`retriever_agent.py`:** Implements the logic for both parallel retrieval nodes:
-        - **Node 2a: Knowledge Base Retriever:** Queries the local ChromaDB.
-        - **Node 2b: Web Researcher:** Queries the external APIs (PubMed, etc.).
+    - **`retriever_agent.py`:** Implements the logic for both parallel retrieval nodes. It should use the `FAST_MODEL` for any query transformations to optimize API calls.
+        - **Node 2a: Knowledge Base Retriever:** Queries the local ChromaDB using a vector embedding of the user's topic.
+        - **Node 2b: Web Researcher:** Transforms the user's topic into optimal search queries for external APIs (PubMed, etc.).
     - **`analysis_agent.py`:** Implements **Node 5: Critical Analysis Agent**.
     - **`insight_agent.py`:** Implements **Node 6: Insight Generation Agent**.
     - **`report_agent.py`:** Implements **Node 7: Report Builder Agent`**.
@@ -120,8 +120,8 @@ We will use an **"accumulator" pattern** for managing the `ResearchState` as it 
 - **Hybrid Model Strategy:**
     - **Embedding Model:** `nomic-embed-text` (Ollama for DEV) / `nomic-ai/nomic-embed-text-v1.5` (OpenRouter for DEMO). Used for generating vector embeddings.
     - **Fast Models:** `mistral` (Ollama for DEV) / `mistralai/mistral-7b-instruct` (OpenRouter for DEMO). Used for summarization, data extraction, and formatting (e.g., `Validate Query` agent).
-    - **Heavy Models:** `llama3` (Ollama for DEV) / `openai/gpt-4o` (OpenRouter for DEMO). Used for complex reasoning tasks like critical analysis, contradiction detection, and hypothesis generation.
-- **Configuration:** Model selection is dynamically handled by `src/config.py` based on the `APP_ENV` environment variable.
+    - **Heavy Models:** `deepseek-r1:8b` (Ollama for DEV) / `openai/gpt-4o` (OpenRouter for DEMO). Used for complex reasoning tasks like critical analysis, contradiction detection, and hypothesis generation.
+- **Configuration:** Model selection is now driven entirely by environment variables loaded from the `.env` file, as defined in `src/config.py`. This allows for flexible configuration without code changes. The following environment variables control the model setup: `LLM_BASE_URL`, `LLM_API_KEY`, `LLM_EMBEDDING_MODEL`, `LLM_FAST_MODEL`, and `LLM_THINKING_MODEL`.
 - **Prompt Templates:** Each agent will utilize specific prompt templates, designed for its role, to guide LLM behavior and ensure structured outputs.
 - **Context Handling:** The LangGraph state will manage the context passed to LLMs, ensuring relevant information is provided within token limits.
 - **Fallback & Retry:** Basic retry mechanisms (e.g., using `tenacity` library) will be implemented for external API calls and potentially for LLM invocations.
