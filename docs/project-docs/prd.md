@@ -126,6 +126,60 @@ This agentic workflow reduces research time, surfaces hidden insights, and produ
 5. **Output Layer:** Report Builder compiles structured research  
 
 ```mermaid
-flowchart LR
-A[User Input] --> B[Contextual Retriever Agent]
-B --> C[Critical Analysis Age]()
+flowchart TD
+    A[User Input] --> B[Contextual Retriever Agent]
+    B --> C[Critical Analysis Agent]
+    C --> D[Insight Generation Agent]
+    D --> E[Report Builder Agent]
+    E --> F[Structured Research Report]
+
+
+7. Technical Requirements
+Area	Requirement
+Model Backend	OpenAI GPT-4/5 API for reasoning & summarization
+Document Parsing	LangChain / PyMuPDF / PDFPlumber
+Retrieval	PubMed API + semantic search via FAISS or ChromaDB
+Frontend (MVP)	Streamlit or Next.js-based simple interface
+Storage	Local vector database for embeddings
+Report Export	Markdown → PDF converter (WeasyPrint / Pandoc)
+8. Example User Flow (Use Case)
+
+Scenario: Researcher exploring “Preventative factors for Gastrointestinal Stromal Tumors (GIST).”
+
+Uploads 50+ GIST research papers
+
+Retriever Agent gathers additional PubMed studies
+
+Analysis Agent flags SSRIs correlation with reduced GIST incidence
+
+Insight Agent connects SSRI off-target kinase inhibition to c-KIT pathway
+
+Report Builder compiles hypothesis report with references
+
+Outcome: Discovery of novel SSRI-GIST relationship hypothesis.
+
+9. Risks & Mitigations
+Risk	Impact	Mitigation
+Overfitting to general web data	Medium	Restrict domain to medical-only APIs
+Inaccurate summarization	High	Add expert feedback validation loop
+Slow retrieval pipeline	Medium	Pre-index uploaded documents
+Ambiguous insights	Medium	Require multi-source evidence before output
+10. Future Enhancements
+
+Domain-adaptive agent tuning using reinforcement feedback
+
+Integration with Zotero / Mendeley for citation syncing
+
+Voice-based research assistant for hands-free exploration
+
+Multi-agent visual dashboard for reasoning trace visualization
+
+11. Deliverables (Hackathon)
+
+Prototype demonstrating end-to-end agent pipeline
+
+MVP UI for document upload and topic entry
+
+Auto-generated structured research report
+
+Example case: GIST SSRIs hypothesis discovery
