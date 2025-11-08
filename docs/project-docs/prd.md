@@ -1,148 +1,131 @@
-# Product Requirements Document (PRD): Multi-agent AI Deep Researcher
+# 🧠 Product Requirements Document (PRD)
+## Project: Multi-Agent AI Deep Researcher (Medical Domain Focus)
+**Author:** Software Product Analyst  
+**Date:** November 2025  
+**Version:** 1.0  
 
-> This PRD outlines the requirements for a Minimum Viable Product (MVP) of the Multi-agent AI Deep Researcher, intended for the hackathon. The focus is on simplicity, a demonstrable workflow, and a quality outcome.
+---
+
+## 1. Overview
+
+### 1.1 Product Vision
+To empower medical researchers with an intelligent, multi-agent system that automates deep research by ingesting user documents, exploring web sources, performing critical analysis, and generating structured reports — revealing hidden connections and hypotheses that traditional tools overlook.
+
+### 1.2 Problem Statement
+Medical researchers waste significant time manually aggregating, validating, and synthesizing vast medical literature. Existing tools are siloed — handling search, summarization, or citation individually — without holistic reasoning or cross-document insight discovery.
+
+### 1.3 Solution Summary
+The **Multi-Agent AI Deep Researcher** introduces four specialized agents that collaboratively perform domain-specific research:
+1. **Contextual Retriever Agent** – Gathers user and web data.  
+2. **Critical Analysis Agent** – Validates, summarizes, and detects contradictions.  
+3. **Insight Generation Agent** – Builds reasoning chains and hypotheses.  
+4. **Report Builder Agent** – Produces structured, citation-rich reports.  
+
+This agentic workflow reduces research time, surfaces hidden insights, and produces structured outputs suitable for publication or further study.
 
 ---
 
-## 1. Project Overview
-- **Project Name:** Multi-agent AI Deep Researcher (Medical Domain Focus)
-- **Date:** 2025-11-07
-- **Prepared by:** AI Software Product Analyst
-- **Stakeholders:** Hackathon Team, Hackathon Judges
-- **Summary:** This project is an AI research assistant that uses a team of specialized agents to conduct in-depth, multi-source investigations for medical researchers. It combines user-provided documents with web-sourced data to perform critical analysis, generate novel hypotheses, and produce structured reports.
+## 2. Objectives & Success Metrics
 
-## 2. Problem Statement
-Medical researchers face a time-consuming and fragmented process for conducting deep research. They lack efficient tools to integrate their existing knowledge base (papers, notes) with new web-sourced information, perform critical analysis at scale, and uncover non-obvious connections in the data.
-
-## 3. Objectives & Success Criteria
-- **Objective 1:** Automate the research process of collating, summarizing, and analyzing medical information from multiple sources.
-- **Objective 2:** Demonstrate the ability to uncover a hidden connection or generate a novel, data-driven hypothesis.
-- **Objective 3:** Produce a structured, coherent, and useful research report as the final output.
-
-- **Success Criteria (for Hackathon):**
-    - [ ] A user can initiate a research task on a medical topic.
-    - [ ] The system successfully processes at least one user-provided document and retrieves relevant data from the web.
-    - [ ] The final output is a single, structured report that includes a summary, a critical analysis, and at least one plausible hypothesis.
-    - [ ] The entire process is demonstrable in a live presentation.
-
-## 4. User Stories & Acceptance Criteria
-
-**US1: Knowledge Base Creation**
-- **As a:** Medical Researcher,
-- **I want:** to upload my library of documents (.txt, .pdf, .csv) and have them indexed into a persistent knowledge base,
-- **So that:** the system has a rich, reusable foundation for all my research tasks.
-- **Acceptance Criteria:**
-    - [ ] The UI has a "Setup & Indexing" section.
-    - [ ] User can upload one or more supported files.
-    - [ ] A button triggers the indexing process, which saves or updates a vector store file on disk.
-    - [ ] The UI displays a list of successfully indexed file names.
-    - [ ] The system shows a clear error message for unsupported file types (e.g., scanned images) without crashing.
-
-**US2: Research Execution**
-- **As a:** Medical Researcher,
-- **I want:** to enter a research topic and trigger the analysis with a single click,
-- **So that:** the system can generate a comprehensive report using my knowledge base and fresh web data.
-- **Acceptance Criteria:**
-    - [ ] The UI has a "Research & Analysis" section.
-    - [ ] User can type a topic into a text input field.
-    - [ ] A "Generate Report" button starts the multi-agent process.
-    - [ ] The process loads the pre-built vector store from disk.
-    - [ ] The system queries the PubMed and openFDA APIs.
-
-**US3: Progress Monitoring**
-- **As a:** Medical Researcher,
-- **I want:** to see the current status of the analysis (e.g., "Analyzing...", "Generating Report..."),
-- **So that:** I have confidence the system is working on my request.
-- **Acceptance Criteria:**
-    - [ ] The UI displays the current agent/stage of the process after the report generation is triggered.
-
-**US4: Report Consumption**
-- **As a:** Medical Researcher,
-- **I want:** to download the final, structured Markdown report,
-- **So that:** I can easily review the findings, novel hypotheses, and sources.
-- **Acceptance Criteria:**
-    - [ ] A "Download Report" button appears when the process is complete.
-    - [ ] The downloaded file is a well-formatted `.md` file.
-    - [ ] The report contains the required sections: Executive Summary, Detailed Findings, Contradictions & Gaps, Generated Hypotheses, and Sources.
-
-## 5. Key Features & Requirements
-
-### Functional Requirements
-- **F1: Document Indexing & Persistence**
-    - Support `.txt`, `.pdf`, and `.csv` file ingestion.
-    - Generate vector embeddings from the text content of supported files.
-    - Save and load the vector store to/from a local file (e.g., using FAISS or ChromaDB).
-    - Gracefully handle and report errors for unsupported files.
-- **F2: Multi-Source Data Retrieval**
-    - Query the local vector store based on the research topic.
-    - Query the public PubMed and openFDA APIs with relevant keywords.
-- **F3: Multi-Agent Analysis & Synthesis**
-    - **Critical Analysis Agent:** Must summarize findings, label data by source ("User-Provided," "PubMed," "openFDA"), and validate information by checking for it in more than one source.
-    - **Insight Generation Agent:** Must be able to form at least a two-step reasoning chain to propose a hypothesis.
-- **F4: Report Generation**
-    - Generate a single, well-structured Markdown file.
-    - The report must contain the following sections: Executive Summary, Detailed Findings, Contradictions & Gaps, Generated Hypotheses, and Sources.
-
-### Non-Functional Requirements
-- **NF1: User Interface:** A simple, two-section Streamlit application that is clean, functional, and guides the user through the two-step workflow.
-- **NF2: Performance:** The "Generate Report" step should feel responsive for a demo, ideally completing within 2 minutes.
-
-## 6. User Flow / Process Diagram
-
-1.  **Setup Phase (Pre-Demo Preparation):**
-    - The user opens the Streamlit app and navigates to the **"Setup & Indexing"** section.
-    - The user uploads a batch of local research documents.
-    - The user clicks "Add to Knowledge Base."
-    - The system processes the files and saves/updates the vector store on the local disk. The UI confirms which files were indexed.
-
-2.  **Research Phase (Live Demo):**
-    - The user navigates to the **"Research & Analysis"** section.
-    - The user enters a specific research topic (e.g., "GIST preventative factors").
-    - The user clicks "Generate Report."
-    - The system provides real-time status updates (e.g., "Loading knowledge base...", "Querying PubMed...", "Running analysis...").
-    - When the process is complete, a "Download Report" button appears.
-    - The user clicks the button to download the final Markdown report.
-
-## 7. Feature Scope Matrix (MVP)
-
-| Feature Area                 | Feature Description                                   | In Scope (MVP) | Out of Scope (MVP) |
-|:-----------------------------|:------------------------------------------------------|:---------------|:-------------------|
-| **User Provided Documents**  | Upload `.txt`, `.pdf`, `.csv` files                 | Yes            | No                 |
-|                              | Upload `.doc`, `.docx`, `.ppt`, images, audio       | No             | Yes                |
-|                              | Error handling for unsupported/unreadable files       | Yes            | No                 |
-| **Knowledge Base (KB)**      | Persistent vector store (e.g., FAISS, ChromaDB)     | Yes            | No                 |
-|                              | UI for managing (list, delete, update) individual KB files | No             | Yes                |
-| **Web Data Sources**         | PubMed API integration                                | Yes            | No                 |
-|                              | openFDA API integration                               | Yes            | No                 |
-|                              | Other web sources (e.g., arXiv, general news APIs)    | No             | Yes                |
-| **Agent Functionality**      | Contextual Retriever Agent (local KB + web)           | Yes            | No                 |
-|                              | Critical Analysis Agent (summarize, validate, flag contradictions) | Yes            | No                 |
-|                              | Insight Generation Agent (propose hypotheses via reasoning) | Yes            | No                 |
-|                              | Report Builder Agent (compile structured Markdown)    | Yes            | No                 |
-| **Report Generation**        | Markdown output format                                | Yes            | No                 |
-|                              | Fixed report structure (Exec. Summary, Findings, etc.)| Yes            | No                 |
-|                              | User-defined report templates                         | No             | Yes                |
-| **User Interface**           | Streamlit App                                         | Yes            | No                 |
-|                              | Two-section UI (Setup & Indexing, Research & Analysis)| Yes            | No                 |
-|                              | Complex UI (job lists, persistent history, func. area selection) | No             | Yes                |
-| **Core Goal**                | Find hidden connections/generate hypotheses           | Yes            | No                 |
-
-## 8. Out of Scope
-- User accounts and authentication.
-- A polished, production-grade user interface.
-- Support for non-English languages.
-- Real-time, continuous monitoring of sources.
-- Processing of scanned image documents that require OCR.
-- Support for a large number of concurrent users.
-
-## 9. Dependencies & Risks
-- **Dependencies:**
-    - Access to a public medical database/API (e.g., PubMed).
-    - A stable LLM for agent reasoning and generation.
-    - Python environment with necessary libraries (e.g., LangChain/LlamaIndex).
-- **Risks:**
-    - The chosen web source/API may be unreliable or have strict rate limits.
-    - The LLM may hallucinate or generate low-quality, irrelevant content.
-    - Integrating the four agents into a seamless workflow may be complex.
+| Objective | Success Criteria |
+|------------|------------------|
+| Automate document ingestion and retrieval | Upload & parse PDFs; retrieve top N relevant medical articles |
+| Generate critical analysis summaries | Summarization accuracy ≥ 80% human-evaluated alignment |
+| Discover non-obvious correlations | At least one plausible hypothesis per topic |
+| Produce structured research reports | Report output with validated citations, summary, and insights |
+| Demonstrate agent collaboration | Four agents complete end-to-end workflow autonomously |
 
 ---
+
+## 3. Target Users
+
+| User Type | Description | Needs |
+|------------|-------------|--------|
+| **Medical Researchers** | Professionals conducting clinical or academic research | Faster literature review, cross-source insight discovery |
+| **Pharmaceutical Analysts** | Analysts seeking drug repurposing or trend identification | Hypothesis generation and validation |
+| **Clinical Academics / Students** | Learners conducting thesis or publication-oriented studies | Auto-summarization, structured citations |
+
+---
+
+## 4. Scope
+
+### 4.1 In Scope (MVP)
+- PDF/Text ingestion for user-provided medical documents  
+- Web data retrieval using domain-specific APIs (e.g., PubMed, Semantic Scholar)  
+- Basic reasoning and hypothesis generation (via chain-of-thought simulation)  
+- End-to-end structured report generation (Markdown/PDF export)  
+
+### 4.2 Out of Scope (Future)
+- Integration with proprietary journal databases  
+- Real-time collaboration or chat interface  
+- Custom model fine-tuning on institutional datasets  
+
+---
+
+## 5. Key Features (MVP)
+
+### 5.1 Contextual Retriever Agent
+**Goal:** Ingest and contextualize research material.  
+**Functional Requirements:**
+- [FR-1] Accept multiple file types: `.pdf`, `.txt`, `.docx`  
+- [FR-2] Perform domain-aware search using medical keywords  
+- [FR-3] Retrieve top 10 relevant papers via PubMed API  
+- [FR-4] Store document embeddings for semantic retrieval  
+
+**Acceptance Criteria:**
+- User can upload files and trigger automatic keyword extraction  
+- Agent retrieves at least 5 relevant external sources  
+
+---
+
+### 5.2 Critical Analysis Agent
+**Goal:** Validate and synthesize multi-source information.  
+**Functional Requirements:**
+- [FR-5] Summarize core findings from multiple documents  
+- [FR-6] Detect contradictions/conflicts among sources  
+- [FR-7] Assign reliability scores to each source  
+
+**Acceptance Criteria:**
+- Output includes “Summary,” “Contradictions,” and “Reliability” sections  
+- Summaries validated by subject expert feedback  
+
+---
+
+### 5.3 Insight Generation Agent
+**Goal:** Propose novel hypotheses and identify hidden links.  
+**Functional Requirements:**
+- [FR-8] Build reasoning chains across cross-domain evidence  
+- [FR-9] Suggest new research hypotheses with supporting rationale  
+- [FR-10] Tag findings with confidence levels (High/Medium/Low)  
+
+**Acceptance Criteria:**
+- At least one hypothesis generated per topic  
+- Each hypothesis includes references and reasoning trail  
+
+---
+
+### 5.4 Report Builder Agent
+**Goal:** Generate structured research outputs.  
+**Functional Requirements:**
+- [FR-11] Compile summary, analysis, and insights into a report  
+- [FR-12] Include citations (APA/MLA format)  
+- [FR-13] Export in Markdown or PDF format  
+
+**Acceptance Criteria:**
+- Final report auto-generated and downloadable  
+- Includes clear structure: Abstract → Findings → Hypotheses → References  
+
+---
+
+## 6. System Workflow
+
+1. **Input Layer:** User uploads medical documents and enters topic  
+2. **Retrieval Layer:** Contextual Retriever gathers web + local data  
+3. **Analysis Layer:** Critical Analysis Agent summarizes and validates  
+4. **Insight Layer:** Insight Generator forms hypotheses  
+5. **Output Layer:** Report Builder compiles structured research  
+
+```mermaid
+flowchart LR
+A[User Input] --> B[Contextual Retriever Agent]
+B --> C[Critical Analysis Age]()
