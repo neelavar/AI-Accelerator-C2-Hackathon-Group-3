@@ -4,7 +4,7 @@ version = "0.1.0"
 description = "Multi-Agent AI Medical Researcher - Intelligent research assistant for medical literature"
 authors = [{name = "Team Group 3", email = "team@mediscout.ai"}]
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.11"
 license = {text = "MIT"}
 
 dependencies = [
@@ -81,12 +81,12 @@ markers = [
 
 [tool.black]
 line-length = 100
-target-version = ["py313"]
+target-version = ["py311"]
 include = '\.pyi?$'
 
 [tool.ruff]
 line-length = 100
-target-version = "py313"
+target-version = "py311"
 select = [
     "E",   # pycodestyle errors
     "W",   # pycodestyle warnings
@@ -102,7 +102,7 @@ ignore = [
 ]
 
 [tool.mypy]
-python_version = "3.13"
+python_version = "3.11"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
