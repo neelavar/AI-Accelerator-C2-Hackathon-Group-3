@@ -1,0 +1,197 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Domain Model" id="domain-model">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="1400">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <mxCell id="title" value="MediScout Domain Model - Entity Relationships" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=24;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="350" y="20" width="700" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="research-session" value="ResearchSession" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="100" y="100" width="220" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="session-attrs" value="+ session_id: str (UUID)&#xa;+ topic: str&#xa;+ created_at: datetime&#xa;+ status: SessionStatus&#xa;+ knowledge_base_id: str" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="research-session">
+          <mxGeometry y="26" width="220" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="session-line" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" vertex="1" parent="research-session">
+          <mxGeometry y="110" width="220" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="session-methods" value="+ execute(): Report" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="research-session">
+          <mxGeometry y="118" width="220" height="22" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="knowledge-base" value="KnowledgeBase" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="400" y="100" width="220" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="kb-attrs" value="+ kb_id: str (UUID)&#xa;+ name: str&#xa;+ embedding_model: str&#xa;+ dimension: int&#xa;+ total_documents: int" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="knowledge-base">
+          <mxGeometry y="26" width="220" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="kb-line" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" vertex="1" parent="knowledge-base">
+          <mxGeometry y="110" width="220" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="kb-methods" value="+ add_documents(): void" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="knowledge-base">
+          <mxGeometry y="118" width="220" height="22" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="document" value="Document" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="700" y="100" width="220" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="doc-attrs" value="+ document_id: str (UUID)&#xa;+ source: DocumentSource&#xa;+ title: str&#xa;+ authors: List[str]&#xa;+ abstract: str&#xa;+ content: str&#xa;+ url: str (optional)&#xa;+ doi: str (optional)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="document">
+          <mxGeometry y="26" width="220" height="114" as="geometry" />
+        </mxCell>
+        <mxCell id="doc-line" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" vertex="1" parent="document">
+          <mxGeometry y="140" width="220" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="doc-methods" value="+ chunk_text(): List[Chunk]" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="document">
+          <mxGeometry y="148" width="220" height="22" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="doc-chunk" value="DocumentChunk" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="100" width="220" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="chunk-attrs" value="+ chunk_id: str (UUID)&#xa;+ document_id: str&#xa;+ content: str&#xa;+ embedding: List[float]&#xa;+ sequence_number: int" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="doc-chunk">
+          <mxGeometry y="26" width="220" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="chunk-line" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" vertex="1" parent="doc-chunk">
+          <mxGeometry y="110" width="220" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="chunk-methods" value="+ generate_embedding(): void" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="doc-chunk">
+          <mxGeometry y="118" width="220" height="22" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="retrieval-result" value="RetrievalResult" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="100" y="340" width="220" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="ret-attrs" value="+ retrieval_id: str (UUID)&#xa;+ session_id: str&#xa;+ query: str&#xa;+ results: List[RankedDoc]&#xa;+ total_results: int" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="retrieval-result">
+          <mxGeometry y="26" width="220" height="74" as="geometry" />
+        </mxCell>
+        <mxCell id="ret-line" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" vertex="1" parent="retrieval-result">
+          <mxGeometry y="100" width="220" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="ret-methods" value="+ rank_documents(): void" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="retrieval-result">
+          <mxGeometry y="108" width="220" height="22" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="analysis-result" value="AnalysisResult" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="400" y="340" width="220" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="ana-attrs" value="+ analysis_id: str (UUID)&#xa;+ document_id: str&#xa;+ summary: str&#xa;+ study_design: StudyDesign&#xa;+ outcomes: List[str]&#xa;+ reliability_score: float" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="analysis-result">
+          <mxGeometry y="26" width="220" height="94" as="geometry" />
+        </mxCell>
+        <mxCell id="ana-line" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" vertex="1" parent="analysis-result">
+          <mxGeometry y="120" width="220" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="ana-methods" value="+ validate_sources(): void" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="analysis-result">
+          <mxGeometry y="128" width="220" height="22" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="hypothesis" value="Hypothesis" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="700" y="340" width="220" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="hyp-attrs" value="+ hypothesis_id: str (UUID)&#xa;+ statement: str&#xa;+ reasoning_chain: List[str]&#xa;+ supporting_docs: List[str]&#xa;+ confidence: ConfidenceLevel&#xa;+ novelty_score: float" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="hypothesis">
+          <mxGeometry y="26" width="220" height="94" as="geometry" />
+        </mxCell>
+        <mxCell id="hyp-line" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" vertex="1" parent="hypothesis">
+          <mxGeometry y="120" width="220" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="hyp-methods" value="+ assess_confidence(): void" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="hypothesis">
+          <mxGeometry y="128" width="220" height="22" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="report" value="Report" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="340" width="220" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="rep-attrs" value="+ report_id: str (UUID)&#xa;+ title: str&#xa;+ exec_summary: str&#xa;+ detailed_findings: str&#xa;+ hypotheses: List[Hypothesis]&#xa;+ citations: List[str]" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="report">
+          <mxGeometry y="26" width="220" height="94" as="geometry" />
+        </mxCell>
+        <mxCell id="rep-line" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;" vertex="1" parent="report">
+          <mxGeometry y="120" width="220" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="rep-methods" value="+ export_markdown(): str" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;" vertex="1" parent="report">
+          <mxGeometry y="128" width="220" height="22" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rel1" value="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;endArrow=none;endFill=0;startArrow=classic;startFill=1;" edge="1" parent="1" source="session-attrs" target="kb-attrs">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="0.5" y="-15" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel1-label" value="uses" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="330" y="145" width="60" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rel2" value="*" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;endArrow=none;endFill=0;startArrow=classic;startFill=1;" edge="1" parent="1" source="kb-attrs" target="doc-attrs">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="0.5" y="-15" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel2-label" value="contains" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="630" y="145" width="60" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rel3" value="*" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;endArrow=none;endFill=0;startArrow=classic;startFill=1;" edge="1" parent="1" source="doc-attrs" target="chunk-attrs">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="0.5" y="-15" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel3-label" value="split into" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="930" y="145" width="60" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rel4" value="produces" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;endArrow=classic;endFill=1;" edge="1" parent="1" source="research-session" target="retrieval-result">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rel5" value="includes *" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;endArrow=classic;endFill=1;" edge="1" parent="1" source="retrieval-result" target="analysis-result">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rel6" value="generates *" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;endArrow=classic;endFill=1;" edge="1" parent="1" source="analysis-result" target="hypothesis">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rel7" value="includes *" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;endArrow=classic;endFill=1;" edge="1" parent="1" source="hypothesis" target="report">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="rel8" value="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;endArrow=classic;endFill=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;dashPattern=5 5;" edge="1" parent="1" source="session-methods" target="rep-attrs">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="960" y="229" />
+              <mxPoint x="960" y="387" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="rel8-label" value="returns" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="960" y="300" width="60" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="legend" value="Legend" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;align=left;verticalAlign=top;spacingLeft=10;spacingTop=10;fontSize=12;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="100" y="550" width="400" height="150" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="leg1" value="Enums:" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="120" y="580" width="150" height="20" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="leg2" value="SessionStatus: INITIALIZING, INDEXING,&#xa;RETRIEVING, ANALYZING, COMPLETED&#xa;&#xa;DocumentSource: USER_UPLOAD, PUBMED,&#xa;CLINICAL_TRIALS, GOOGLE_SCHOLAR&#xa;&#xa;ConfidenceLevel: LOW, MEDIUM, HIGH" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="120" y="605" width="350" height="85" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="note1" value="Key Business Rules:" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#d4f1d4;strokeColor=#82b366;align=left;verticalAlign=top;spacingLeft=10;spacingTop=10;fontSize=12;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="550" y="550" width="670" height="150" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="note2" value="1. Every claim must reference source documents (traceability)&#xa;2. Hypotheses require minimum 2 supporting documents&#xa;3. All embeddings use same model (384-dim)&#xa;4. Document chunks: 500 tokens with 100 token overlap&#xa;5. Retrieval precision target: 0.6 at top-5 (92% actual)&#xa;6. Analysis reliability score: 0.8-1.0 for RCTs, 0.3-0.5 for case studies&#xa;7. Reports must include medical disclaimer" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;fontSize=10;" vertex="1" parent="1">
+          <mxGeometry x="570" y="585" width="630" height="105" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
