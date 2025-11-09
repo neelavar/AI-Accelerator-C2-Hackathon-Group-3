@@ -42,7 +42,7 @@ class CriticalAnalysisAgent:
         self.settings = get_settings()
         
         # Use FAST 3B model for speed (not 70B)
-        fast_model = "google/gemma-2-9b-it:free"  # Fast and reliable alternative
+        fast_model = "meta-llama/llama-3.1-8b-instruct:free"  # Verified working free model
         
         # Initialize LLM with OpenRouter
         self.llm = ChatOpenAI(

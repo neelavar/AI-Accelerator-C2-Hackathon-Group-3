@@ -52,7 +52,7 @@ class ValidateQueryAgent:
         self.settings = get_settings()
         
         # Use FAST model for validation (not the heavy one)
-        fast_model = "google/gemma-2-9b-it:free"  # Fast and reliable alternative
+        fast_model = "meta-llama/llama-3.1-8b-instruct:free"  # Verified working free model
         
         # Initialize LLM with OpenRouter
         self.llm = ChatOpenAI(
