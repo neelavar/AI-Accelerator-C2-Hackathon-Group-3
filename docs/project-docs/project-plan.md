@@ -1,0 +1,78 @@
+# Project Plan: AI Deep Researcher Hackathon
+
+> This project plan outlines the tasks, workstreams, and strategy for delivering the Multi-agent AI Deep Researcher (MediScout) MVP within the one-day hackathon.
+
+## 0. Initial Project Setup (All Developers)
+
+These steps are to be completed by all developers before starting on their specific workstreams.
+
+| Task ID | Description | Verification Step | Status |
+| :--- | :--- | :--- | :--- |
+| **0.1** | Clone the repository and ensure `uv` is installed. | `git clone <repo_url>` and `uv --version` | `[ ]` |
+| **0.2** | Create `.env` file from `.env.example` and populate with necessary API keys and model names. | `cp .env.example .env` and edit the file. | `[ ]` |
+| **0.3** | Install project dependencies and the project itself in editable mode. | `uv pip install -r requirements.txt && uv pip install -e .` | `[ ]` |
+
+## 0. Initial Project Setup (All Developers)
+
+These steps are to be completed by all developers before starting on their specific workstreams.
+
+| Task ID | Description | Verification Step | Status |
+| :--- | :--- | :--- | :--- |
+| **0.1** | Clone the repository and ensure `uv` is installed. | `git clone <repo_url>` and `uv --version` | `[ ]` |
+| **0.2** | Create and activate a virtual environment. | `uv venv` then `source .venv/bin/activate` (Linux/macOS) or `.venv\Scripts\activate` (Windows) | `[ ]` |
+| **0.3** | Create `.env` file from `.env.example` and populate with necessary API keys and model names. | `cp .env.example .env` and edit the file. | `[ ]` |
+| **0.4** | Install project dependencies and the project itself in editable mode. | `uv pip compile pyproject.toml -o requirements.txt` then `uv pip install -r requirements.txt` then `uv pip install -e .` | `[ ]` |
+
+## 1. High-Level Strategy
+
+Our strategy is built on three core principles to ensure success under a tight deadline:
+1.  **Parallel Workstreams:** The project is broken down into three independent workstreams, allowing developers to work in parallel without blocking each other.
+2.  **Mock-First Development:** The UI and Orchestration layers will be developed against mocked backends first. This allows for independent development and testing before integration.
+3.  **Incremental Integration:** Components will be integrated one by one, with clear verification steps at each stage to minimize integration risk.
+
+## 2. Key Scope Decisions (MVP v1)
+
+To ensure a deliverable E2E product, the following scope limitations are in effect:
+- **External APIs:** Only **PubMed** will be integrated. Support for other APIs is deferred.
+- **Text Chunking Strategy:** The RAG evaluation is **deferred**. We will use the default parameters from the TDD (`chunk_size=1000`, `chunk_overlap=200`).
+- **File Support:** The MVP will focus on ingesting **`.pdf`** and **`.txt`** files. CSV support is deferred.
+- **Insight Generation:** The `InsightGeneration` agent is considered a **stretch goal**. The primary goal is a robust report from the `CriticalAnalysis` agent.
+
+## 3. Workstreams & Task Breakdown
+
+### Developer 1: Backend Data Specialist
+
+**Goal:** Produce a stable, CLI-testable data pipeline for document ingestion and retrieval.
+
+| Task ID | Description | Verification Step (How to Test) | Status |
+| :--- | :--- | :--- | :--- |
+| **1.1** | Implement `src/config.py` to load all environment variables. | Run `python -c "from src.config import settings; print(settings.LLM_FAST_MODEL)"` | `[ ]` |
+| **1.2** | Implement file loading (PDF, TXT) and text chunking in `src/knowledge_base.py`. | Create a test script to load a doc and print the resulting chunks. | `[ ]` |
+| **1.3** | Implement embedding generation and ChromaDB storage in `src/knowledge_base.py`. | Extend the test script to run the full ingestion and confirm the DB is created on disk. | `[ ]` |
+| **1.4** | Implement the PubMed API client in `src/services/external_apis.py`. | Create a test script that calls the client with a query and prints the results. | `[ ]` |
+| **1.5** | **(Milestone)** Create a final CLI script (`scripts/test_retrieval.py`) that takes a query, retrieves data from both ChromaDB and PubMed, and prints the combined results. | Run the script from the command line to confirm the full data backend is working. | `[ ]` |
+
+### Developer 2: Agent & Orchestration Specialist
+
+**Goal:** Build the complete agentic workflow, testable via the CLI with mocked dependencies.
+
+| Task ID | Description | Verification Step (How to Test) | Status |
+| :--- | :--- | :--- | :--- |
+| **2.1** | Define `ResearchState` (`src/state.py`) and all agent Pydantic schemas (`src/schemas.py`). | Code review; no runtime test needed. | `[ ]` |
+| **2.2** | Scaffold the full LangGraph in `src/orchestrator.py` with placeholder nodes that print their name and pass state. | Create a CLI script (`scripts/test_orchestrator.py`) to invoke the graph and verify that all nodes are called in the correct order. | `[ ]` |
+| **2.3** | Implement the logic for each agent (`Validate Query`, `Retriever`, `Analysis`, `Report Builder`) in `src/agents/`. **Mock all LLM calls and calls to Dev 1's modules.** | Unit test each agent's logic to ensure it correctly processes mock input and produces the expected state changes. | `[ ]` |
+| **2.4** | **(Milestone)** Replace the placeholder nodes in the orchestrator with the real (but still mocked) agent logic. | Run `scripts/test_orchestrator.py` again. This tests the full graph logic with controlled agent behavior. | `[ ]` |
+| **2.5** | **(Integration)** Once Dev 1 is done, replace the backend mocks in the agents with real calls to `knowledge_base.py` and `external_apis.py`. | Run the CLI test script to confirm the orchestrator now works with the live data backend. | `[ ]` |
+
+### Developer 3: Frontend & Integration Specialist
+
+**Goal:** Create a fully responsive UI that works first with a mock backend, then integrate the real components.
+
+| Task ID | Description | Verification Step (How to Test) | Status |
+| :--- | :--- | :--- | :--- |
+| **3.1** | Build the complete Streamlit UI layout in `main.py` with all components (uploader, inputs, status box, etc.). | Run `streamlit run main.py` and visually confirm the layout. | `[ ]` |
+| **3.2** | Implement the `StreamlitCallbackHandler` in `src/streamlit_callback.py`. | No direct test; will be verified in the next step. | `[ ]` |
+| **3.3** | Create mock backend functions in `main.py` that simulate ingestion and report generation, using the callback handler to send fake status updates. | Wire the UI to these mocks. The UI should now be fully interactive and "feel" like it's working. | `[ ]` |
+| **3.4** | **(Milestone)** You now have a complete, testable UI that is independent of the other developers. This is your baseline. | Demonstrate the full mock UI flow. | `[ ]` |
+| **3.5** | **(Integration)** Once Dev 1 is done, replace the mock ingestion function with the real one from `knowledge_base.py`. | Test the file upload and indexing feature in the UI. | `[ ]` |
+| **3.6** | **(Integration)** Once Dev 2 is done, replace the mock report generation function with the real call to the LangGraph orchestrator. | Run the full, end-to-end flow from the Streamlit UI. | `[ ]` |
