@@ -259,8 +259,11 @@ pydantic==2.12.4
     #   langgraph
     #   langsmith
     #   openai
+    #   pydantic-settings
 pydantic-core==2.41.5
     # via pydantic
+pydantic-settings==2.11.0
+    # via mediscout (pyproject.toml)
 pydeck==0.9.1
     # via streamlit
 pygments==2.19.2
@@ -279,6 +282,7 @@ python-dateutil==2.9.0.post0
 python-dotenv==1.2.1
     # via
     #   mediscout (pyproject.toml)
+    #   pydantic-settings
     #   uvicorn
 pytz==2025.2
     # via pandas
@@ -407,7 +411,9 @@ typing-extensions==4.15.0
     #   typer
     #   typing-inspection
 typing-inspection==0.4.2
-    # via pydantic
+    # via
+    #   pydantic
+    #   pydantic-settings
 tzdata==2025.2
     # via pandas
 urllib3==2.3.0

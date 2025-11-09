@@ -1,4 +1,60 @@
-# AI-Accelerator-C2-Hackathon-Group-3
+# MediScout - AI Medical Research Assistant
+
+**Group 3 Project | AI Accelerator Programme (C2 Cohort)**
+
+MediScout is a multi-agent AI system for medical research that combines local document analysis with external database searches (PubMed) to provide comprehensive critical analysis and automated report generation.
+
+## 🚀 Quick Start
+
+### For Anaconda Users
+See [SETUP.md](SETUP.md) for detailed instructions.
+
+### For Non-Anaconda Users  
+See [SETUP-NON-ANACONDA.md](SETUP-NON-ANACONDA.md) for standard Python/pip setup.
+
+### Basic Setup (5 minutes)
+```bash
+# 1. Clone repository
+git clone https://github.com/neelavar/AI-Accelerator-C2-Hackathon-Group-3.git
+cd AI-Accelerator-C2-Hackathon-Group-3
+
+# 2. Create virtual environment
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+
+# 3. Install dependencies
+pip install -r requirements.txt
+pip install -e .
+
+# 4. Configure environment
+cp .env.example .env
+# Edit .env and add your OPENROUTER_API_KEY and PUBMED_EMAIL
+
+# 5. Run application
+streamlit run main.py
+```
+
+## 📋 Prerequisites
+
+- **Python:** 3.11, 3.12, or 3.13 (NOT 3.14+)
+- **API Keys:**
+  - OpenRouter API key (required) - Get from [openrouter.ai](https://openrouter.ai/keys)
+  - LangSmith API key (optional) - Get from [smith.langchain.com](https://smith.langchain.com/)
+- **Email:** Valid email for PubMed API access (no registration needed)
+
+## 🏗️ Architecture
+
+MediScout uses a **multi-agent orchestration** pattern with LangGraph:
+
+```
+User Query → Validator → Retriever → Analyzer → Report Builder → User
+                ↓           ↓
+           Local KB    PubMed API
+```
+
+See [docs/architecture-diagram.html](docs/architecture-diagram.html) for the complete architecture diagram.
+
+## 📚 About This Repository
 
 This repository contains the Group 3 project for the AI Accelerator Programme (C2 cohort). The goal is to rapidly prototype and iterate on AI agents and agentic systems using an AI-augmented design & development process. Project documentation, architecture notes, templates, and persona definitions live under the `docs/` directory.
 
