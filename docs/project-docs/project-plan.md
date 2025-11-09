@@ -1,17 +1,10 @@
-# Project Plan: AI Deep Researcher Hackathon
-
-> This project plan outlines the tasks, workstreams, and strategy for delivering the Multi-agent AI Deep Researcher (MediScout) MVP within the one-day hackathon.
-
-## 0. Initial Project Setup (All Developers)
-
-These steps are to be completed by all developers before starting on their specific workstreams.
-
 | Task ID | Description | Verification Step | Status |
 | :--- | :--- | :--- | :--- |
-| **0.1** | Clone the repository and ensure `uv` is installed. | `git clone <repo_url>` and `uv --version` | `[ ]` |
-| **0.2** | Create and activate a virtual environment. | `uv venv` then `source .venv/bin/activate` (Linux/macOS) or `.venv\Scripts\activate` (Windows) | `[ ]` |
-| **0.3** | Create `.env` file from `.env.example` and populate with necessary API keys and model names. | `cp .env.example .env` and edit the file. | `[ ]` |
-| **0.4** | Install project dependencies and the project itself in editable mode. | `uv pip compile pyproject.toml -o requirements.txt` then `uv pip install -r requirements.txt` then `uv pip install -e .` | `[ ]` |
+| **0.1** | Clone the repository and ensure `uv` is installed. | `git clone <repo_url>` and `uv --version` | `[x]` |
+| **0.2** | Create and activate a virtual environment. | `uv venv` then `source .venv/bin/activate` (Linux/macOS) or `.venv\Scripts
+activate` (Windows) | `[x]` |
+| **0.3** | Create `.env` file from `.env.example` and populate with necessary API keys and model names. | `cp .env.example .env` and edit the file. | `[x]` |
+| **0.4** | Install project dependencies and the project itself in editable mode. | `uv pip compile pyproject.toml -o requirements.txt` then `uv pip install -r requirements.txt` then `uv pip install -e .` | `[x]` |
 
 ## 1. High-Level Strategy
 
@@ -64,11 +57,14 @@ To ensure a deliverable E2E product, the following scope limitations are in effe
 | **3.2** | Implement the `StreamlitCallbackHandler` in `src/streamlit_callback.py`. | No direct test; verified during UI mock-up. | `[x]` |
 | **3.3** | Create mock backend functions in `main.py` that simulate ingestion and report generation, using the callback handler to send fake status updates. | Wire the UI to these mocks. The UI should now be fully interactive and "feel" like it's working. | `[x]` |
 | **3.4** | **(Milestone)** You now have a complete, testable UI that is independent of the other developers. This is your baseline. | Demonstrate the full mock UI flow. | `[x]` |
-| **3.5** | **(Integration)** Once Dev 1 is done, replace the mock ingestion function with the real one from `knowledge_base.py`. | Test the file upload and indexing feature in the UI. | `[ ]` |
+| **3.5** | **(Integration)** Once Dev 1 is done, replace the mock ingestion function with the real one from `knowledge_base.py`. | Test the file upload and indexing feature in the UI. | `[x]` |
 | **3.6** | **(Integration)** Once Dev 2 is done, replace the mock report generation function with the real call to the LangGraph orchestrator. | Run the full, end-to-end flow from the Streamlit UI. | `[ ]` |
 
 **Note on Developer 3 Progress:**
 Developer 3 has successfully completed the initial UI build-out and mock integration. This includes modularizing the UI into `src/ui/knowledge_base_tab.py` and `src/ui/research_tab.py`, implementing the tabbed layout, and developing the interactive "Document Workbench" with scrollable cards, preview functionality, and smart indexing feedback. The `StreamlitCallbackHandler` and mock backend are also in place. This milestone provides a solid foundation for integrating with the real backend components.
+
+**Update on Developer 3 - Task 3.5:**
+Task 3.5 is now complete. The real `knowledge_base.py` has been successfully integrated for document ingestion. This includes ensuring document persistence across Streamlit sessions, preserving original file names in the UI, and fixing the document preview feature to display actual extracted text content. The "Enable Auto-Sync" checkbox has been removed.
 
 ## Hackathon Progress Log
 
