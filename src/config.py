@@ -6,6 +6,7 @@ from openai import OpenAI
 # Load environment variables from .env file
 load_dotenv()
 
+BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:8000")
 # --- General Settings ---
 # APP_ENV is still useful for parts of the app that might have other environment-specific logic.
 APP_ENV = os.getenv("APP_ENV", "DEV") 
@@ -42,11 +43,11 @@ class LLMClient:
 # Instantiate a single, shared client configuration
 llm_config = LLMClient()
 
-# --- Expose the configured client and model names ---
 llm_client = llm_config.client
 EMBEDDING_MODEL = llm_config.embedding_model
 FAST_MODEL = llm_config.fast_model
 THINKING_MODEL = llm_config.thinking_model
+BACKEND_URL = BACKEND_URL
 
 # Example of how to use in another file:
 # from src.config import llm_client, FAST_MODEL

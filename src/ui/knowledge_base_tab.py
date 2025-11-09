@@ -1,5 +1,6 @@
 import streamlit as st
-from src.mock_backend import mock_ingest_files # Import the mock backend
+import requests
+from src.config import BACKEND_URL
 
 def render_knowledge_base_tab():
     st.header("Manage Your Knowledge Base")
@@ -35,28 +36,33 @@ def render_knowledge_base_tab():
     # Sync & Index Button
     if st.button("Sync & Index Knowledge Base") or (auto_sync_enabled and current_uploaded_file_details != current_indexed_file_details):
         if uploaded_files:
-            indexing_summary = mock_ingest_files(uploaded_files) # mock_ingest_files now returns a summary dict
-            
-            if indexing_summary:
+            try:
+                files = [("files", (f.name, f, f.type)) for f in uploaded_files]
+                response = requests.post(
+                    f"{BACKEND_URL}/api/knowledge_base/index",
+                    files=files
+                )
+                response.raise_for_status()
+                indexing_summary = response.json()
                 summary_message = []
-                if indexing_summary["newly_indexed_count"] > 0:
+                if indexing_summary.get("newly_indexed_count", 0) > 0:
                     summary_message.append(f"{indexing_summary['newly_indexed_count']} new document(s) indexed.")
-                if indexing_summary["updated_count"] > 0:
+                if indexing_summary.get("updated_count", 0) > 0:
                     summary_message.append(f"{indexing_summary['updated_count']} document(s) updated.")
-                if indexing_summary["skipped_count"] > 0:
+                if indexing_summary.get("skipped_count", 0) > 0:
                     summary_message.append(f"{indexing_summary['skipped_count']} document(s) skipped (already indexed).")
-                if indexing_summary["removed_count"] > 0:
+                if indexing_summary.get("removed_count", 0) > 0:
                     summary_message.append(f"{indexing_summary['removed_count']} document(s) removed from KB.")
-                
                 if summary_message:
                     st.success(" ".join(summary_message))
                 else:
                     st.info("No changes detected in documents.")
+                # Update indexed_files for research tab compatibility
+                st.session_state.indexed_files = [f.name for f in uploaded_files]
                 st.rerun()
-            else:
-                st.error("An error occurred during indexing.")
+            except Exception as e:
+                st.error(f"An error occurred during indexing: {e}")
         else:
-            # Handle case where user clicks index with no files uploaded (clear KB)
             st.session_state.indexed_documents = []
             st.warning("No documents uploaded. Knowledge Base cleared.")
             st.rerun()
