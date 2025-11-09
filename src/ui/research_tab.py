@@ -13,7 +13,7 @@ def render_research_tab():
     if st.button("Generate Report"):
         if not research_topic:
             st.warning("Please enter a research topic.")
-        elif not st.session_state.indexed_files:
+        elif not st.session_state.indexed_documents:
             st.warning("Please add documents to your knowledge base first in the 'Knowledge Base' tab.")
         else:
             st.subheader("Generated Report")

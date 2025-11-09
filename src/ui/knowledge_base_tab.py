@@ -1,10 +1,19 @@
 import streamlit as st
-from src.mock_backend import mock_ingest_files # Import the mock backend
+import tempfile
+import os
+from src.knowledge_base import KnowledgeBase
+from src.config import settings
+from langchain_community.document_loaders import PyPDFLoader, TextLoader
 
 def render_knowledge_base_tab():
     st.header("Manage Your Knowledge Base")
     st.markdown("Upload your internal research documents, papers, or data files to create a persistent knowledge base for the AI to use.")
     
+    # Initialize KnowledgeBase in session state if not already initialized
+    if 'kb' not in st.session_state:
+        st.session_state.kb = KnowledgeBase()
+    kb = st.session_state.kb
+
     uploaded_files = st.file_uploader(
         "Upload Files (.pdf, .txt)",
         type=["pdf", "txt"],
@@ -14,52 +23,97 @@ def render_knowledge_base_tab():
     # Initialize session state for indexed documents (list of dicts)
     if "indexed_documents" not in st.session_state:
         st.session_state.indexed_documents = []
+    
+    # Attempt to load existing documents from ChromaDB
+    print("UI: Attempting to load existing documents from Knowledge Base.")
+    existing_docs = kb.get_all_document_metadata()
+    print(f"UI: kb.get_all_document_metadata() returned {len(existing_docs)} documents.")
+    
+    # Update session state if documents exist in ChromaDB
+    if existing_docs:
+        st.session_state.indexed_documents = existing_docs
+        if len(existing_docs) > 0:
+            st.success(f"Loaded {len(existing_docs)} documents from Knowledge Base.")
+    else:
+        print("UI: No existing documents found in Knowledge Base or an error occurred.")
     if "preview_file_name" not in st.session_state:
         st.session_state.preview_file_name = None
     if "preview_content" not in st.session_state:
         st.session_state.preview_content = ""
 
-    # Determine current uploaded file details for comparison
-    current_uploaded_file_details = {(f.name, f.size) for f in uploaded_files} if uploaded_files else set()
-    
-    # Determine currently indexed file details for comparison
-    current_indexed_file_details = {(doc['name'], doc['size']) for doc in st.session_state.indexed_documents}
-
-    # Check if the file selection has changed and prompt the user to re-index
-    if current_uploaded_file_details != current_indexed_file_details:
-        st.info("Your document selection has changed. Click 'Sync & Index Knowledge Base' to update the knowledge base.")
-
-    # Auto-Sync Checkbox (defaulting to False)
-    auto_sync_enabled = st.checkbox("Enable Auto-Sync (re-indexes automatically on file changes)", value=False)
-
     # Sync & Index Button
-    if st.button("Sync & Index Knowledge Base") or (auto_sync_enabled and current_uploaded_file_details != current_indexed_file_details):
+    if st.button("Sync & Index Knowledge Base"):
+        indexing_summary = {
+            "newly_indexed_count": 0,
+            "updated_count": 0,
+            "skipped_count": 0,
+            "removed_count": 0
+        }
+        
         if uploaded_files:
-            indexing_summary = mock_ingest_files(uploaded_files) # mock_ingest_files now returns a summary dict
+            temp_file_paths = []
+            file_info_for_kb = [] # New list to store (temp_path, original_name)
+            extracted_contents = {} # To store extracted text for preview
             
-            if indexing_summary:
-                summary_message = []
-                if indexing_summary["newly_indexed_count"] > 0:
-                    summary_message.append(f"{indexing_summary['newly_indexed_count']} new document(s) indexed.")
-                if indexing_summary["updated_count"] > 0:
-                    summary_message.append(f"{indexing_summary['updated_count']} document(s) updated.")
-                if indexing_summary["skipped_count"] > 0:
-                    summary_message.append(f"{indexing_summary['skipped_count']} document(s) skipped (already indexed).")
-                if indexing_summary["removed_count"] > 0:
-                    summary_message.append(f"{indexing_summary['removed_count']} document(s) removed from KB.")
+            for uploaded_file in uploaded_files:
+                # Save to a temporary file for KnowledgeBase ingestion
+                with tempfile.NamedTemporaryFile(delete=False, suffix=os.path.splitext(uploaded_file.name)[1]) as tmp_file:
+                    tmp_file.write(uploaded_file.getvalue())
+                    temp_file_paths.append(tmp_file.name)
+                    file_info_for_kb.append((tmp_file.name, uploaded_file.name)) # Store temp path and original name
                 
-                if summary_message:
-                    st.success(" ".join(summary_message))
-                else:
-                    st.info("No changes detected in documents.")
-                st.rerun()
-            else:
-                st.error("An error occurred during indexing.")
+                # Extract text content for preview
+                file_extension = os.path.splitext(uploaded_file.name)[1].lower()
+                try:
+                    if file_extension == ".pdf":
+                        loader = PyPDFLoader(tmp_file.name)
+                    elif file_extension == ".txt":
+                        loader = TextLoader(tmp_file.name)
+                    else:
+                        extracted_contents[uploaded_file.name] = "Preview not available for this file type."
+                        continue
+                    
+                    docs = loader.load()
+                    full_text = "\n\n".join([doc.page_content for doc in docs])
+                    extracted_contents[uploaded_file.name] = full_text
+                except Exception as e:
+                    extracted_contents[uploaded_file.name] = f"Error extracting text: {e}"
+
+            try:
+                with st.spinner(f"Processing {len(uploaded_files)} documents..."):
+                    # Clear existing data
+                    kb.clear_collection()
+                    
+                    # Add new documents and wait for confirmation
+                    kb.add_documents(file_info_for_kb)
+                    
+                    # Give ChromaDB a moment to process
+                    import time
+                    time.sleep(2)  # Small delay to ensure processing completes
+                    
+                    # Verify documents were added by checking the KB
+                    indexed_docs = kb.get_all_document_metadata()
+                    print(f"Verification: Found {len(indexed_docs)} documents in KB after indexing")
+                    
+                    if indexed_docs:
+                        st.session_state.indexed_documents = indexed_docs
+                        indexing_summary["newly_indexed_count"] = len(uploaded_files)
+                        st.success(f"{indexing_summary['newly_indexed_count']} document(s) successfully indexed.")
+                    else:
+                        st.error("Documents were not successfully indexed. Please try again.")
+                        print("Error: No documents found in KB after attempted indexing")
+
+            except Exception as e:
+                st.error(f"An error occurred during indexing: {e}")
+            finally:
+                for path in temp_file_paths:
+                    os.remove(path) # Clean up temporary files
         else:
             # Handle case where user clicks index with no files uploaded (clear KB)
+            kb.clear_collection()
             st.session_state.indexed_documents = []
             st.warning("No documents uploaded. Knowledge Base cleared.")
-            st.rerun()
+        st.rerun()
 
     # Document Workbench Display
     if st.session_state.indexed_documents:
@@ -121,11 +175,9 @@ def render_knowledge_base_tab():
             file_name = doc['name']
             file_size = doc['size']
             file_status = doc['status'] # e.g., 'indexed', 'updated'
+            file_content = doc['content'] # Get actual content
 
             with cols[i % 3]: # Place cards in columns
-                # Mock content for preview
-                mock_preview_content = f"--- Preview of {file_name} ---\n\nThis is a mock preview content for the file '{file_name}'.\n\nFile Size: {file_size} bytes\nStatus: {file_status}\n\nIn a real implementation, this would show the actual extracted text from the document.\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-                
                 st.markdown(f"""
                 <div class="document-card-compact">
                     <div class="document-card-info">
@@ -142,7 +194,7 @@ def render_knowledge_base_tab():
                 with button_cols[0]:
                     if st.button("👁️", key=f"preview_{file_name}_{i}", help="Preview Document"):
                         st.session_state.preview_file_name = file_name
-                        st.session_state.preview_content = mock_preview_content
+                        st.session_state.preview_content = file_content # Use actual content
                         st.rerun()
                 with button_cols[1]:
                     if st.button("🗑️", key=f"remove_{file_name}_{i}", help="Remove Document"):
@@ -165,3 +217,25 @@ def render_knowledge_base_tab():
                 st.session_state.preview_file_name = None
                 st.session_state.preview_content = ""
                 st.rerun()
+
+    # Test Knowledge Base Retrieval Section
+    st.subheader("Test Knowledge Base Retrieval")
+    query_text = st.text_input("Enter your query here to test retrieval:", key="retrieval_query")
+    
+    if st.button("Retrieve Documents", key="retrieve_button"):
+        if query_text:
+            with st.spinner("Searching Knowledge Base..."):
+                try:
+                    retrieved_docs = kb.search(query_text)
+                    if retrieved_docs:
+                        st.success(f"Found {len(retrieved_docs)} relevant documents.")
+                        for i, doc in enumerate(retrieved_docs):
+                            with st.expander(f"Retrieved Document {i+1} (Source: {doc.metadata.get('source_file', 'N/A')})"):
+                                st.write(doc.page_content)
+                                st.json(doc.metadata)
+                    else:
+                        st.info("No documents found matching your query.")
+                except Exception as e:
+                    st.error(f"Error during retrieval: {e}")
+        else:
+            st.warning("Please enter a query to retrieve documents.")

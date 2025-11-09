@@ -15,10 +15,8 @@ st.title("🩺 MediScout: AI Medical Researcher")
 st.markdown("Your AI-powered partner for deep medical research and hypothesis generation.")
 
 # Initialize global session state variables if they don't exist
-if "indexed_files" not in st.session_state:
-    st.session_state.indexed_files = []
-if "indexed_file_names" not in st.session_state:
-    st.session_state.indexed_file_names = set()
+if "indexed_documents" not in st.session_state:
+    st.session_state.indexed_documents = []
 
 # --- Main Layout with Tabs ---
 tab1, tab2 = st.tabs(["🧠 Knowledge Base", "🔍 Research & Analysis"])
