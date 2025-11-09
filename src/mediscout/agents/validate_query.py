@@ -51,12 +51,12 @@ class ValidateQueryAgent:
         """Initialize the validation agent."""
         self.settings = get_settings()
         
-        # Use FAST model for validation (not the heavy one)
-        fast_model = "meta-llama/llama-3.1-8b-instruct:free"  # Verified working free model
+        # Use the configured model from settings (works with your OpenRouter account)
+        # This avoids issues with free model availability
         
         # Initialize LLM with OpenRouter
         self.llm = ChatOpenAI(
-            model=fast_model,
+            model=self.settings.openrouter_model,
             temperature=0.0,
             api_key=self.settings.openrouter_api_key,
             base_url="https://openrouter.ai/api/v1",

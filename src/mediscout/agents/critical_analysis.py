@@ -41,12 +41,12 @@ class CriticalAnalysisAgent:
         """Initialize the analysis agent."""
         self.settings = get_settings()
         
-        # Use FAST 3B model for speed (not 70B)
-        fast_model = "meta-llama/llama-3.1-8b-instruct:free"  # Verified working free model
+        # Use the configured model from settings (works with your OpenRouter account)
+        # This avoids issues with free model availability
         
         # Initialize LLM with OpenRouter
         self.llm = ChatOpenAI(
-            model=fast_model,
+            model=self.settings.openrouter_model,
             temperature=0.0,
             max_tokens=1000,  # Reduced for speed
             timeout=10,  # Aggressive timeout
