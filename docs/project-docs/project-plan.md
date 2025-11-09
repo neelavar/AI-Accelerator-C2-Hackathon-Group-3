@@ -9,16 +9,6 @@ These steps are to be completed by all developers before starting on their speci
 | Task ID | Description | Verification Step | Status |
 | :--- | :--- | :--- | :--- |
 | **0.1** | Clone the repository and ensure `uv` is installed. | `git clone <repo_url>` and `uv --version` | `[ ]` |
-| **0.2** | Create `.env` file from `.env.example` and populate with necessary API keys and model names. | `cp .env.example .env` and edit the file. | `[ ]` |
-| **0.3** | Install project dependencies and the project itself in editable mode. | `uv pip install -r requirements.txt && uv pip install -e .` | `[ ]` |
-
-## 0. Initial Project Setup (All Developers)
-
-These steps are to be completed by all developers before starting on their specific workstreams.
-
-| Task ID | Description | Verification Step | Status |
-| :--- | :--- | :--- | :--- |
-| **0.1** | Clone the repository and ensure `uv` is installed. | `git clone <repo_url>` and `uv --version` | `[ ]` |
 | **0.2** | Create and activate a virtual environment. | `uv venv` then `source .venv/bin/activate` (Linux/macOS) or `.venv\Scripts\activate` (Windows) | `[ ]` |
 | **0.3** | Create `.env` file from `.env.example` and populate with necessary API keys and model names. | `cp .env.example .env` and edit the file. | `[ ]` |
 | **0.4** | Install project dependencies and the project itself in editable mode. | `uv pip compile pyproject.toml -o requirements.txt` then `uv pip install -r requirements.txt` then `uv pip install -e .` | `[ ]` |
@@ -70,9 +60,12 @@ To ensure a deliverable E2E product, the following scope limitations are in effe
 
 | Task ID | Description | Verification Step (How to Test) | Status |
 | :--- | :--- | :--- | :--- |
-| **3.1** | Build the complete Streamlit UI layout in `main.py` with all components (uploader, inputs, status box, etc.). | Run `streamlit run main.py` and visually confirm the layout. | `[ ]` |
-| **3.2** | Implement the `StreamlitCallbackHandler` in `src/streamlit_callback.py`. | No direct test; will be verified in the next step. | `[ ]` |
-| **3.3** | Create mock backend functions in `main.py` that simulate ingestion and report generation, using the callback handler to send fake status updates. | Wire the UI to these mocks. The UI should now be fully interactive and "feel" like it's working. | `[ ]` |
-| **3.4** | **(Milestone)** You now have a complete, testable UI that is independent of the other developers. This is your baseline. | Demonstrate the full mock UI flow. | `[ ]` |
+| **3.1** | Build the complete Streamlit UI layout in `main.py` with all components (uploader, inputs, status box, etc.). | Run `streamlit run main.py` and visually confirm the layout. | `[x]` |
+| **3.2** | Implement the `StreamlitCallbackHandler` in `src/streamlit_callback.py`. | No direct test; verified during UI mock-up. | `[x]` |
+| **3.3** | Create mock backend functions in `main.py` that simulate ingestion and report generation, using the callback handler to send fake status updates. | Wire the UI to these mocks. The UI should now be fully interactive and "feel" like it's working. | `[x]` |
+| **3.4** | **(Milestone)** You now have a complete, testable UI that is independent of the other developers. This is your baseline. | Demonstrate the full mock UI flow. | `[x]` |
 | **3.5** | **(Integration)** Once Dev 1 is done, replace the mock ingestion function with the real one from `knowledge_base.py`. | Test the file upload and indexing feature in the UI. | `[ ]` |
 | **3.6** | **(Integration)** Once Dev 2 is done, replace the mock report generation function with the real call to the LangGraph orchestrator. | Run the full, end-to-end flow from the Streamlit UI. | `[ ]` |
+
+**Note on Developer 3 Progress:**
+Developer 3 has successfully completed the initial UI build-out and mock integration. This includes modularizing the UI into `src/ui/knowledge_base_tab.py` and `src/ui/research_tab.py`, implementing the tabbed layout, and developing the interactive "Document Workbench" with scrollable cards, preview functionality, and smart indexing feedback. The `StreamlitCallbackHandler` and mock backend are also in place. This milestone provides a solid foundation for integrating with the real backend components.
