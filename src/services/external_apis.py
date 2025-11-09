@@ -38,7 +38,13 @@ class PubMedClient:
         response = await self.client.get(f"{self.BASE_URL}esearch.fcgi", params=params)
         response.raise_for_status()
         data = response.json()
-        return data["esearchresult"]["idlist"]
+        
+        # Handle potential missing data more gracefully
+        try:
+            return data.get("esearchresult", {}).get("idlist", [])
+        except (KeyError, TypeError):
+            print(f"Warning: Unexpected response format from PubMed: {data}")
+            return []
 
     @retry(
         stop=stop_after_attempt(3),

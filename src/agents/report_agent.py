@@ -50,7 +50,7 @@ def execute_report_building(state: ResearchState, llm_client: OpenAI) -> dict:
     
     try:
         response = llm_client.chat.completions.create(
-            model="mock-thinking-model", # This would use the high-reasoning model
+            model=state.get("smart_llm_model", "gpt-4"),  # Use the high-reasoning model from state
             messages=[
                 {"role": "system", "content": "You are an expert medical writer."}, 
                 {"role": "user", "content": prompt},

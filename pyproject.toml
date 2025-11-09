@@ -2,7 +2,7 @@
 name = "mediscout"
 version = "0.1.0"
 description = "Multi-agent AI Deep Researcher for medical domain"
-authors = [{ name = "Prasanna Neelavar", email = "prasanna.neelavar@gmail.com" }, { name = "Ashish Saha", email = "" }] # Placeholder, feel free to change
+authors = [{ name = "Prasanna Neelavar", email = "prasanna.neelavar@gmail.com" }, { name = "Ashish Saha", email = "" }, { name = "Saravanan", email = "" }] # Placeholder, feel free to change
 requires-python = ">=3.10" # Compatible with Python 3.13
 
 dependencies = [
