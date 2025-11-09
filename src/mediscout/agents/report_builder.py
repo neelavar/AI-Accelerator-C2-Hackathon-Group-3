@@ -44,7 +44,7 @@ class ReportBuilderAgent:
         self.settings = get_settings()
         
         # Use FAST 3B model for speed (not 70B)
-        fast_model = "meta-llama/llama-3.2-3b-instruct:free"
+        fast_model = "google/gemma-2-9b-it:free"  # Fast and reliable alternative
         
         # Initialize LLM with OpenRouter
         self.llm = ChatOpenAI(
