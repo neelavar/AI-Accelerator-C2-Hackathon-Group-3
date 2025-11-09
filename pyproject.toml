@@ -2,7 +2,7 @@
 name = "mediscout"
 version = "0.1.0"
 description = "Multi-agent AI Deep Researcher for medical domain"
-authors = [{ name = "Prasanna Neelavar", email = "prasanna.neelavar@gmail.com" }] # Placeholder, feel free to change
+authors = [{ name = "Prasanna Neelavar", email = "prasanna.neelavar@gmail.com" }, { name = "Ashish Saha", email = "" }] # Placeholder, feel free to change
 requires-python = ">=3.10" # Compatible with Python 3.13
 
 dependencies = [
@@ -22,8 +22,9 @@ dependencies = [
     "langsmith>=0.0.70", # For observability
     "httpx>=0.26.0", # For external API calls
     "tiktoken>=0.5.0", # For LLM token counting
-    # If you plan to use Ollama directly as a client, uncomment the line below:
+    # If you plan to use Ollama directly as a client, uncomment the lines below:
     # "ollama>=0.1.0",
+    # "langchain-ollama>=0.1.0",
 ]
 
 [project.optional-dependencies]

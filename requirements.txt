@@ -161,6 +161,7 @@ httpx==0.28.1
     #   chromadb
     #   langgraph-sdk
     #   langsmith
+    #   ollama
     #   openai
     #   unstructured-client
 httpx-sse==0.4.3
@@ -221,11 +222,14 @@ langchain-core==1.0.4
     #   langchain-chroma
     #   langchain-classic
     #   langchain-community
+    #   langchain-ollama
     #   langchain-openai
     #   langchain-text-splitters
     #   langgraph
     #   langgraph-checkpoint
     #   langgraph-prebuilt
+langchain-ollama==1.0.0
+    # via mediscout (pyproject.toml)
 langchain-openai==1.0.2
     # via mediscout (pyproject.toml)
 langchain-text-splitters==1.0.0
@@ -315,6 +319,10 @@ olefile==0.47
     # via
     #   msoffcrypto-tool
     #   python-oxmsg
+ollama==0.6.0
+    # via
+    #   mediscout (pyproject.toml)
+    #   langchain-ollama
 omegaconf==2.3.0
     # via effdet
 onnx==1.19.1
@@ -452,6 +460,7 @@ pydantic==2.12.4
     #   langchain-core
     #   langgraph
     #   langsmith
+    #   ollama
     #   openai
     #   pydantic-settings
     #   unstructured-client
