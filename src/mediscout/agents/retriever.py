@@ -5,9 +5,11 @@ Retrieves relevant documents from multiple sources (knowledge base + PubMed).
 """
 
 import time
+import asyncio
 from pathlib import Path
 from typing import Dict, Any, List
 from loguru import logger
+from concurrent.futures import ThreadPoolExecutor, TimeoutError as FutureTimeoutError
 
 from mediscout.config import get_settings
 from mediscout.knowledge_base import KnowledgeBase
@@ -29,7 +31,7 @@ class RetrieverAgent:
     
     def __call__(self, state: ResearchState) -> Dict[str, Any]:
         """
-        Retrieve relevant documents from all sources.
+        Retrieve relevant documents based on search scope (parallelized for speed).
         
         Args:
             state: Current research state
@@ -38,40 +40,54 @@ class RetrieverAgent:
             Updated state with retrieved documents
         """
         query = state.get("refined_query") or state["research_topic"]
-        logger.info(f"Retrieving documents for query: '{query}'")
+        search_scope = state.get("search_scope", "local_and_pubmed")
+        
+        logger.info(f"Retrieving documents for query: '{query}' (scope: {search_scope})")
         
         start_time = time.time()
         user_docs = []
         pubmed_docs = []
         sources_used = []
         
-        try:
-            # Retrieve from knowledge base
-            logger.info("Searching local knowledge base...")
-            user_docs = self.knowledge_base.search(
-                query=query,
-                top_k=self.settings.top_k_results // 2  # Split quota
-            )
-            if user_docs:
-                sources_used.append("user")
-                logger.info(f"Found {len(user_docs)} documents from knowledge base")
+        # Determine which sources to search based on scope
+        search_local = search_scope in ["local_only", "local_and_pubmed"]
+        search_pubmed = search_scope in ["pubmed_only", "local_and_pubmed"]
         
-        except Exception as e:
-            logger.error(f"Knowledge base search failed: {e}")
-        
-        try:
-            # Retrieve from PubMed
-            logger.info("Searching PubMed...")
-            pubmed_docs = self.pubmed_client.search(
-                query=query,
-                max_results=self.settings.pubmed_max_results
-            )
-            if pubmed_docs:
-                sources_used.append("pubmed")
-                logger.info(f"Found {len(pubmed_docs)} documents from PubMed")
-        
-        except Exception as e:
-            logger.error(f"PubMed search failed: {e}")
+        # Use ThreadPoolExecutor for parallel searches with timeouts
+        with ThreadPoolExecutor(max_workers=2) as executor:
+            futures = {}
+            
+            # Submit searches based on scope
+            if search_local:
+                futures["kb"] = executor.submit(self._search_knowledge_base, query)
+            
+            if search_pubmed:
+                futures["pubmed"] = executor.submit(self._search_pubmed, query)
+            
+            # Get results with BALANCED timeouts (fast but allow completion)
+            if "kb" in futures:
+                try:
+                    user_docs = futures["kb"].result(timeout=3.0)  # 3s for local KB
+                    if user_docs:
+                        sources_used.append("user")
+                        logger.info(f"⚡ LOCAL KB: Found {len(user_docs)} documents (scores: {[f'{d.relevance_score:.2f}' for d in user_docs[:3]]})")
+                except FutureTimeoutError:
+                    logger.warning("⏱️ Knowledge base search timed out after 3s")
+                except Exception as e:
+                    logger.error(f"❌ Knowledge base search failed: {e}", exc_info=True)
+            
+            if "pubmed" in futures:
+                try:
+                    pubmed_docs = futures["pubmed"].result(timeout=10.0)  # 10s for PubMed (API is slow)
+                    if pubmed_docs:
+                        sources_used.append("pubmed")
+                        logger.info(f"🌐 PUBMED: Found {len(pubmed_docs)} articles: {[d.title[:50] for d in pubmed_docs[:3]]}")
+                    else:
+                        logger.warning("⚠️ PubMed returned 0 results")
+                except FutureTimeoutError:
+                    logger.warning("⏱️ PubMed search timed out after 10s (continuing with available results)")
+                except Exception as e:
+                    logger.error(f"❌ PubMed search failed: {e}", exc_info=True)
         
         # Combine and sort by relevance
         all_docs = self._combine_and_rank(user_docs, pubmed_docs)
@@ -98,6 +114,34 @@ class RetrieverAgent:
             "retrieved_documents": all_docs,
             "current_stage": "documents_retrieved"
         }
+    
+    def _search_knowledge_base(self, query: str) -> List[Document]:
+        """Search local knowledge base (for parallel execution - FAST)."""
+        try:
+            logger.info("⚡ Searching local knowledge base...")
+            results = self.knowledge_base.search(
+                query=query,
+                top_k=3  # REDUCED to 3 for speed
+            )
+            logger.info(f"KB search complete: {len(results)} results")
+            return results
+        except Exception as e:
+            logger.error(f"KB search error: {e}", exc_info=True)
+            return []
+    
+    def _search_pubmed(self, query: str) -> List[Document]:
+        """Search PubMed (for parallel execution - FAST)."""
+        try:
+            logger.info("🌐 Searching PubMed...")
+            results = self.pubmed_client.search(
+                query=query,
+                max_results=3  # REDUCED to 3 for speed
+            )
+            logger.info(f"PubMed search complete: {len(results)} articles retrieved")
+            return results
+        except Exception as e:
+            logger.error(f"PubMed search error: {e}", exc_info=True)
+            return []
     
     def _combine_and_rank(
         self,

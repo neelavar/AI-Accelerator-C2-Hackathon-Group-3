@@ -16,52 +16,23 @@ from mediscout.schemas import AnalysisResult, Report
 from mediscout.state import ResearchState
 
 
-REPORT_PROMPT = """You are a medical research report writer. Create a comprehensive, well-structured research report.
+REPORT_PROMPT = """Create a brief medical research report in Markdown:
 
-**Research Topic:** {topic}
+**Topic:** {topic}
 
-**Analysis Results:**
-{analysis_summary}
+**Analysis:** {analysis_summary}
 
-**Instructions:**
-Create a professional research report in Markdown format with these sections:
+Include:
+# Summary
+- Key findings (2-3 sentences)
 
-# Executive Summary
-- 2-3 paragraphs summarizing key findings and conclusions
+## Main Results  
+- Bullet points from sources
 
-## Methods
-- Describe sources used (knowledge base, PubMed)
-- Number of documents analyzed
-- Search and analysis methodology
+## Sources
+- List source titles
 
-## Detailed Findings
-- Organize by themes or study types
-- Present key results from each analyzed document
-- Include study designs, populations, interventions, and outcomes
-- Use subheadings for organization
-
-## Contradictions & Research Gaps
-- Highlight any contradictory findings between studies
-- Identify limitations in current research
-- Note areas needing further investigation
-
-## Critical Analysis Summary
-- Synthesize overall evidence
-- Assess quality and reliability of sources
-- Provide balanced interpretation
-
-## Sources & Citations
-- List all sources in AMA format
-- Include PubMed IDs, URLs, and titles
-
-**Requirements:**
-- Use proper Markdown formatting (headers, lists, bold, links)
-- Be evidence-based and precise
-- Cite sources with [Source ID] inline
-- Maintain professional medical writing tone
-- Include disclaimers about research use only
-
-Generate the complete report now:
+Keep it concise and evidence-based.
 """
 
 
@@ -72,13 +43,17 @@ class ReportBuilderAgent:
         """Initialize the report builder agent."""
         self.settings = get_settings()
         
+        # Use FAST 3B model for speed (not 70B)
+        fast_model = "meta-llama/llama-3.2-3b-instruct:free"
+        
         # Initialize LLM with OpenRouter
         self.llm = ChatOpenAI(
-            model=self.settings.openrouter_model,
+            model=fast_model,
             temperature=0.3,  # Slightly higher for better writing
+            max_tokens=2000,  # Reduced for speed
+            timeout=10,  # Aggressive timeout
             api_key=self.settings.openrouter_api_key,
-            base_url="https://openrouter.ai/api/v1",
-            max_tokens=4000
+            base_url="https://openrouter.ai/api/v1"
         )
         
         self.prompt = ChatPromptTemplate.from_template(REPORT_PROMPT)

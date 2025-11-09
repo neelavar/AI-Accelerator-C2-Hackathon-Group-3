@@ -1,0 +1,268 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="MediScout Architecture" id="main">
+    <mxGraphModel dx="1600" dy="1200" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1200">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        
+        <!-- Title -->
+        <mxCell id="2" value="MediScout - Multi-Agent AI Medical Research System" style="text;fontSize=22;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="400" y="20" width="800" height="40" as="geometry"/>
+        </mxCell>
+        
+        <!-- User Interface Layer Background -->
+        <mxCell id="3" value="" style="rounded=1;fillColor=#dae8fc;strokeColor=#6c8ebf;opacity=60;" vertex="1" parent="1">
+          <mxGeometry x="100" y="80" width="1400" height="140" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="4" value="USER INTERFACE LAYER" style="text;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="120" y="90" width="250" height="30" as="geometry"/>
+        </mxCell>
+        
+        <!-- UI Components -->
+        <mxCell id="5" value="Streamlit Web App&#10;&#10;• Document Upload&#10;• Query Input&#10;• Report Display" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="150" y="130" width="180" height="80" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="6" value="Progress Display&#10;&#10;• Progress Bar&#10;• Stage Updates&#10;• Real-time" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="370" y="130" width="180" height="80" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="7" value="Search Scope&#10;&#10;• Local Only&#10;• Local + PubMed&#10;• PubMed Only" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="590" y="130" width="180" height="80" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="8" value="Document Manager&#10;&#10;• Preview&#10;• Chunks&#10;• Search" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="810" y="130" width="180" height="80" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="9" value="Results Display&#10;&#10;• Markdown Report&#10;• Retrieved Docs&#10;• Matching Sections" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1030" y="130" width="180" height="80" as="geometry"/>
+        </mxCell>
+        
+        <!-- Orchestration Layer -->
+        <mxCell id="10" value="" style="rounded=1;fillColor=#fff2cc;strokeColor=#d6b656;opacity=60;" vertex="1" parent="1">
+          <mxGeometry x="100" y="260" width="1400" height="120" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="11" value="ORCHESTRATION LAYER (LangGraph)" style="text;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="120" y="270" width="350" height="30" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="12" value="Research Orchestrator&#10;&#10;• State Management (ResearchState)&#10;• Agent Coordination&#10;• Workflow Control&#10;• Error Handling" style="rounded=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="600" y="300" width="400" height="70" as="geometry"/>
+        </mxCell>
+        
+        <!-- Agents Layer -->
+        <mxCell id="13" value="" style="rounded=1;fillColor=#f8cecc;strokeColor=#b85450;opacity=60;" vertex="1" parent="1">
+          <mxGeometry x="100" y="420" width="1100" height="140" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="14" value="AGENT LAYER (Multi-Agent System)" style="text;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="120" y="430" width="350" height="30" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="15" value="1. Validate Query&#10;&#10;• Fast Path&#10;• LLM Validation&#10;&#10;Model: Llama-3.2-3B" style="rounded=1;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="150" y="470" width="200" height="80" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="16" value="2. Retriever&#10;&#10;• Local KB Search&#10;• PubMed Search&#10;&#10;Top-3, Parallel" style="rounded=1;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="390" y="470" width="200" height="80" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="17" value="3. Critical Analysis&#10;&#10;• Evidence Synthesis&#10;• Quality Check&#10;&#10;Model: Llama-3.1-70B" style="rounded=1;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="630" y="470" width="200" height="80" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="18" value="4. Report Builder&#10;&#10;• Markdown Gen&#10;• Attribution&#10;&#10;Model: Llama-3.1-70B" style="rounded=1;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="870" y="470" width="200" height="80" as="geometry"/>
+        </mxCell>
+        
+        <!-- Knowledge Base Layer -->
+        <mxCell id="19" value="" style="rounded=1;fillColor=#e1d5e7;strokeColor=#9673a6;opacity=60;" vertex="1" parent="1">
+          <mxGeometry x="100" y="600" width="550" height="200" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="20" value="KNOWLEDGE BASE LAYER" style="text;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="120" y="610" width="280" height="30" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="21" value="Document Processor&#10;&#10;• PDF/TXT Extraction&#10;• Chunking (1000 tokens)&#10;• Overlap: 150" style="rounded=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="150" y="650" width="200" height="70" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="22" value="Embedding Generator&#10;&#10;• all-MiniLM-L6-v2&#10;• Dim: 384&#10;• Cached (Singleton)" style="rounded=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="400" y="650" width="200" height="70" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="23" value="ChromaDB Vector Store&#10;&#10;• Cosine Similarity • Persistent • Fast Top-3" style="rounded=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="150" y="740" width="450" height="40" as="geometry"/>
+        </mxCell>
+        
+        <!-- External Services -->
+        <mxCell id="24" value="" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;opacity=60;" vertex="1" parent="1">
+          <mxGeometry x="700" y="600" width="800" height="200" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="25" value="EXTERNAL SERVICES LAYER" style="text;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="720" y="610" width="300" height="30" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="26" value="OpenRouter API&#10;&#10;• Llama-3.2-3B (Validation)&#10;• Llama-3.1-70B (Analysis)&#10;• Timeout: 15s" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="740" y="650" width="280" height="70" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="27" value="PubMed API&#10;&#10;• Article Search&#10;• Max Results: 3&#10;• Bio.Entrez" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="1070" y="650" width="280" height="70" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="28" value="LangSmith (Observability)&#10;&#10;• Tracing • Monitoring • Debug" style="rounded=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="740" y="740" width="610" height="40" as="geometry"/>
+        </mxCell>
+        
+        <!-- Performance Box -->
+        <mxCell id="29" value="⚡ PERFORMANCE&#10;&#10;• Cached Model&#10;• Top-3 Results&#10;• Parallel Search&#10;• Fast Path&#10;• 1000 token chunks&#10;&#10;Speed: 3-5s" style="rounded=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1250" y="420" width="200" height="140" as="geometry"/>
+        </mxCell>
+        
+        <!-- Tech Stack -->
+        <mxCell id="30" value="" style="rounded=1;fillColor=#f5f5f5;strokeColor=#666666;opacity=60;" vertex="1" parent="1">
+          <mxGeometry x="100" y="840" width="1400" height="80" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="31" value="TECH STACK" style="text;fontSize=14;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="120" y="850" width="150" height="30" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="32" value="Frontend: Streamlit  |  Backend: Python 3.12  |  Orchestration: LangGraph  |  LLM: OpenRouter  |  Vector DB: ChromaDB  |  Embeddings: sentence-transformers  |  APIs: PubMed  |  Observability: LangSmith" style="text;fontSize=11;align=center;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="150" y="880" width="1300" height="30" as="geometry"/>
+        </mxCell>
+        
+        <!-- Data Flow Arrows -->
+        <mxCell id="33" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#0066CC;" edge="1" parent="1" source="5" target="12">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="34" value="Query" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontColor=#0066CC;fontStyle=1;backgroundColor=#ffffff;" vertex="1" connectable="0" parent="33">
+          <mxGeometry x="-0.2" y="2" relative="1" as="geometry">
+            <mxPoint as="offset"/>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="35" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#CC0000;" edge="1" parent="1" source="12" target="15">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="36" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#CC0000;" edge="1" parent="1" source="12" target="16">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="37" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#CC0000;" edge="1" parent="1" source="12" target="17">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="38" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#CC0000;" edge="1" parent="1" source="12" target="18">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="39" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9900CC;dashed=1;" edge="1" parent="1" source="16" target="23">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="40" value="Vector Search" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontColor=#9900CC;fontStyle=1;backgroundColor=#ffffff;" vertex="1" connectable="0" parent="39">
+          <mxGeometry x="-0.2" y="2" relative="1" as="geometry">
+            <mxPoint as="offset"/>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="41" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#006600;dashed=1;" edge="1" parent="1" source="16" target="27">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="490" y="590"/>
+              <mxPoint x="1210" y="590"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="42" value="Search" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontColor=#006600;fontStyle=1;backgroundColor=#ffffff;" vertex="1" connectable="0" parent="41">
+          <mxGeometry x="-0.2" y="2" relative="1" as="geometry">
+            <mxPoint as="offset"/>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="43" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#FF6600;dashed=1;" edge="1" parent="1" source="15" target="26">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="250" y="590"/>
+              <mxPoint x="880" y="590"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="44" value="LLM" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontColor=#FF6600;fontStyle=1;backgroundColor=#ffffff;" vertex="1" connectable="0" parent="43">
+          <mxGeometry x="-0.2" y="2" relative="1" as="geometry">
+            <mxPoint as="offset"/>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="45" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#0066CC;" edge="1" parent="1" source="5" target="21">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="80" y="170"/>
+              <mxPoint x="80" y="685"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="46" value="Upload" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontColor=#0066CC;fontStyle=1;backgroundColor=#ffffff;" vertex="1" connectable="0" parent="45">
+          <mxGeometry x="-0.2" y="2" relative="1" as="geometry">
+            <mxPoint x="-15" as="offset"/>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="47" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9900CC;" edge="1" parent="1" source="21" target="22">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="48" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#9900CC;" edge="1" parent="1" source="22" target="23">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="49" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#006600;" edge="1" parent="1" source="12" target="9">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1460" y="335"/>
+              <mxPoint x="1460" y="170"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="50" value="Report" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=10;fontColor=#006600;fontStyle=1;backgroundColor=#ffffff;" vertex="1" connectable="0" parent="49">
+          <mxGeometry x="-0.2" y="2" relative="1" as="geometry">
+            <mxPoint x="15" as="offset"/>
+          </mxGeometry>
+        </mxCell>
+        
+        <mxCell id="51" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1;strokeColor=#999999;dashed=1;" edge="1" parent="1" source="12" target="6">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="52" value="Progress" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontSize=9;fontColor=#999999;fontStyle=2;backgroundColor=#ffffff;" vertex="1" connectable="0" parent="51">
+          <mxGeometry x="-0.2" y="2" relative="1" as="geometry">
+            <mxPoint as="offset"/>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- Data Flow Labels -->
+        <mxCell id="53" value="DATA FLOW" style="text;fontSize=14;fontStyle=1;align=left;" vertex="1" parent="1">
+          <mxGeometry x="120" y="940" width="150" height="30" as="geometry"/>
+        </mxCell>
+        
+        <mxCell id="54" value="1. User uploads PDF/TXT → Document Processor → Chunking → Embeddings → ChromaDB&#10;2. User enters query → Orchestrator → Validate (fast path) → Retrieve (parallel KB + PubMed) → Analyze → Report → Display&#10;3. Progress updates flow from Orchestrator to Progress Display in real-time" style="text;fontSize=10;align=left;" vertex="1" parent="1">
+          <mxGeometry x="150" y="970" width="1300" height="50" as="geometry"/>
+        </mxCell>
+        
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

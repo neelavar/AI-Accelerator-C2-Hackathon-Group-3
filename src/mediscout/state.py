@@ -24,6 +24,7 @@ class ResearchState(TypedDict):
     
     # Input
     research_topic: str  # Original user query
+    search_scope: Optional[str]  # Search scope: local_only, local_and_pubmed, pubmed_only
     
     # Query Validation
     query_validation: Optional[QueryValidation]  # Result of query validation

@@ -17,29 +17,20 @@ from mediscout.schemas import Document, AnalysisResult
 from mediscout.state import ResearchState
 
 
-ANALYSIS_PROMPT = """You are a medical research analyst performing critical analysis of scientific literature.
+ANALYSIS_PROMPT = """Quick analysis of this medical document:
 
-Analyze the following document and extract structured information:
-
-**Document Title:** {title}
-**Source:** {source}
+**Title:** {title}
 **Content:** {content}
 
-Provide a critical analysis in JSON format:
+JSON response:
 {{
-    "summary": "concise 2-3 sentence summary of key findings",
-    "study_design": "type of study (e.g., RCT, observational, meta-analysis, case study, review) or null",
-    "key_findings": ["finding 1", "finding 2", "finding 3"],
-    "patient_population": "description of study population or null",
-    "intervention": "treatment/intervention studied or null",
-    "outcomes": ["primary outcome", "secondary outcomes"],
-    "statistical_significance": "p-values, confidence intervals, or effect sizes if mentioned",
-    "reliability_score": 0.0-1.0 (assess based on study design, sample size, journal reputation),
-    "contradictions": ["any contradictions with common knowledge"],
-    "limitations": ["study limitation 1", "limitation 2"]
+    "summary": "brief 1-2 sentence summary",
+    "key_findings": ["finding 1", "finding 2"],
+    "reliability_score": 0.0-1.0,
+    "limitations": ["main limitation"]
 }}
 
-Be precise and evidence-based. Extract only information explicitly stated. Use null for missing fields.
+Be concise.
 """
 
 
@@ -50,13 +41,17 @@ class CriticalAnalysisAgent:
         """Initialize the analysis agent."""
         self.settings = get_settings()
         
+        # Use FAST 3B model for speed (not 70B)
+        fast_model = "meta-llama/llama-3.2-3b-instruct:free"
+        
         # Initialize LLM with OpenRouter
         self.llm = ChatOpenAI(
-            model=self.settings.openrouter_model,
+            model=fast_model,
             temperature=0.0,
+            max_tokens=1000,  # Reduced for speed
+            timeout=10,  # Aggressive timeout
             api_key=self.settings.openrouter_api_key,
-            base_url="https://openrouter.ai/api/v1",
-            max_tokens=2000
+            base_url="https://openrouter.ai/api/v1"
         )
         
         self.prompt = ChatPromptTemplate.from_template(ANALYSIS_PROMPT)

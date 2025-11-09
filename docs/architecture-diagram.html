@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediScout System Architecture</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f5f5f5; padding: 20px; }
+        .container { max-width: 1600px; margin: 0 auto; background: white; padding: 40px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { text-align: center; color: #333; margin-bottom: 10px; font-size: 32px; }
+        .subtitle { text-align: center; color: #666; margin-bottom: 40px; font-size: 16px; }
+        
+        .layer { margin-bottom: 30px; padding: 20px; border-radius: 8px; border: 2px solid #ddd; }
+        .layer-title { font-size: 18px; font-weight: bold; margin-bottom: 15px; padding: 10px; background: rgba(0,0,0,0.05); border-radius: 5px; }
+        .components { display: flex; flex-wrap: wrap; gap: 15px; }
+        .component { flex: 1; min-width: 200px; padding: 15px; background: white; border: 2px solid #ddd; border-radius: 6px; }
+        .component-title { font-weight: bold; margin-bottom: 8px; color: #333; }
+        .component-detail { font-size: 13px; color: #666; line-height: 1.6; }
+        
+        .ui-layer { background: #dae8fc; border-color: #6c8ebf; }
+        .ui-layer .component { border-color: #82b366; background: #d5e8d4; }
+        
+        .orch-layer { background: #fff2cc; border-color: #d6b656; }
+        .orch-layer .component { border-color: #d79b00; background: #ffe6cc; }
+        
+        .agent-layer { background: #f8cecc; border-color: #b85450; }
+        .agent-layer .component { border-color: #666666; background: #f5f5f5; }
+        
+        .kb-layer { background: #e1d5e7; border-color: #9673a6; }
+        .kb-layer .component { border-color: #9673a6; background: #e1d5e7; }
+        
+        .ext-layer { background: #d5e8d4; border-color: #82b366; }
+        .ext-layer .component { border-color: #82b366; background: #d5e8d4; }
+        
+        .flow-section { margin-top: 40px; padding: 20px; background: #f9f9f9; border-radius: 8px; }
+        .flow-section h2 { color: #333; margin-bottom: 15px; }
+        .flow-step { background: white; padding: 15px; margin: 10px 0; border-left: 4px solid #0066cc; border-radius: 4px; }
+        .flow-arrow { text-align: center; color: #0066cc; font-size: 24px; margin: 5px 0; }
+        
+        .tech-stack { margin-top: 40px; }
+        .tech-stack table { width: 100%; border-collapse: collapse; }
+        .tech-stack th, .tech-stack td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        .tech-stack th { background: #333; color: white; font-weight: bold; }
+        .tech-stack tr:hover { background: #f5f5f5; }
+        
+        .metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 30px; }
+        .metric-card { background: #fff2cc; padding: 20px; border-radius: 8px; border: 2px solid #d6b656; text-align: center; }
+        .metric-value { font-size: 32px; font-weight: bold; color: #d79b00; }
+        .metric-label { color: #666; margin-top: 5px; }
+        
+        @media print { body { background: white; } .container { box-shadow: none; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔬 MediScout System Architecture</h1>
+        <p class="subtitle">Multi-Agent AI Medical Research System</p>
+        
+        <!-- User Interface Layer -->
+        <div class="layer ui-layer">
+            <div class="layer-title">🔵 USER INTERFACE LAYER</div>
+            <div class="components">
+                <div class="component">
+                    <div class="component-title">Streamlit Web App</div>
+                    <div class="component-detail">
+                        • Document Upload<br>
+                        • Query Input<br>
+                        • Report Display
+                    </div>
+                </div>
+                <div class="component">
+                    <div class="component-title">Progress Display</div>
+                    <div class="component-detail">
+                        • Progress Bar (0-100%)<br>
+                        • Stage Updates<br>
+                        • Real-time Feedback
+                    </div>
+                </div>
+                <div class="component">
+                    <div class="component-title">Search Scope Selector</div>
+                    <div class="component-detail">
+                        • Local KB Only<br>
+                        • Local + PubMed<br>
+                        • PubMed Only
+                    </div>
+                </div>
+                <div class="component">
+                    <div class="component-title">Document Manager</div>
+                    <div class="component-detail">
+                        • Preview Mode<br>
+                        • Chunk Viewer<br>
+                        • Search Within Doc
+                    </div>
+                </div>
+                <div class="component">
+                    <div class="component-title">Results Display</div>
+                    <div class="component-detail">
+                        • Markdown Report<br>
+                        • Retrieved Docs<br>
+                        • Matching Sections
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Orchestration Layer -->
+        <div class="layer orch-layer">
+            <div class="layer-title">🟡 ORCHESTRATION LAYER (LangGraph)</div>
+            <div class="components">
+                <div class="component" style="flex: 1 1 100%;">
+                    <div class="component-title">Research Orchestrator</div>
+                    <div class="component-detail">
+                        • State Management (ResearchState TypedDict)<br>
+                        • Agent Coordination (Sequential workflow)<br>
+                        • Workflow Control (Conditional edges)<br>
+                        • Error Handling (Timeout & retry logic)
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Agent Layer -->
+        <div class="layer agent-layer">
+            <div class="layer-title">🔴 AGENT LAYER (Multi-Agent System)</div>
+            <div class="components">
+                <div class="component">
+                    <div class="component-title">1. Validate Query Agent</div>
+                    <div class="component-detail">
+                        • Fast Path Keywords<br>
+                        • Medical Validation<br>
+                        • Query Refinement<br>
+                        <strong>Model: Llama-3.2-3B</strong>
+                    </div>
+                </div>
+                <div class="component">
+                    <div class="component-title">2. Retriever Agent</div>
+                    <div class="component-detail">
+                        • Local KB Search<br>
+                        • PubMed API Search<br>
+                        • Parallel Execution<br>
+                        <strong>Top-3 Results Each</strong>
+                    </div>
+                </div>
+                <div class="component">
+                    <div class="component-title">3. Critical Analysis Agent</div>
+                    <div class="component-detail">
+                        • Evidence Synthesis<br>
+                        • Quality Assessment<br>
+                        • Key Findings<br>
+                        <strong>Model: Llama-3.1-70B</strong>
+                    </div>
+                </div>
+                <div class="component">
+                    <div class="component-title">4. Report Builder Agent</div>
+                    <div class="component-detail">
+                        • Markdown Generation<br>
+                        • Source Attribution<br>
+                        • Structured Report<br>
+                        <strong>Model: Llama-3.1-70B</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Knowledge Base Layer -->
+        <div class="layer kb-layer">
+            <div class="layer-title">🟣 KNOWLEDGE BASE LAYER</div>
+            <div class="components">
+                <div class="component">
+                    <div class="component-title">Document Processor</div>
+                    <div class="component-detail">
+                        • PDF/TXT Extraction (pypdf)<br>
+                        • Text Chunking (1000 tokens)<br>
+                        • Overlap: 150 tokens<br>
+                        • Metadata Tagging
+                    </div>
+                </div>
+                <div class="component">
+                    <div class="component-title">Embedding Generator</div>
+                    <div class="component-detail">
+                        • Model: all-MiniLM-L6-v2<br>
+                        • Dimension: 384<br>
+                        • Batch Size: 64<br>
+                        • <strong>Cached (Singleton)</strong>
+                    </div>
+                </div>
+                <div class="component">
+                    <div class="component-title">ChromaDB Vector Store</div>
+                    <div class="component-detail">
+                        • Cosine Similarity<br>
+                        • Persistent Storage<br>
+                        • Fast Top-3 Retrieval<br>
+                        • Metadata Filtering
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- External Services Layer -->
+        <div class="layer ext-layer">
+            <div class="layer-title">🟢 EXTERNAL SERVICES LAYER</div>
+            <div class="components">
+                <div class="component">
+                    <div class="component-title">OpenRouter API</div>
+                    <div class="component-detail">
+                        • Llama-3.2-3B (Validation)<br>
+                        • Llama-3.1-70B (Analysis)<br>
+                        • Timeout: 15s<br>
+                        • Free Tier
+                    </div>
+                </div>
+                <div class="component">
+                    <div class="component-title">PubMed API</div>
+                    <div class="component-detail">
+                        • Article Search (esearch)<br>
+                        • Abstract Fetch (efetch)<br>
+                        • Max Results: 3<br>
+                        • Bio.Entrez Client
+                    </div>
+                </div>
+                <div class="component">
+                    <div class="component-title">LangSmith</div>
+                    <div class="component-detail">
+                        • Tracing & Monitoring<br>
+                        • Performance Metrics<br>
+                        • Debug Tools<br>
+                        • Project: mediscout
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Data Flow -->
+        <div class="flow-section">
+            <h2>🔄 Data Flow: Research Query</h2>
+            <div class="flow-step">
+                <strong>1. User Query</strong> → Streamlit UI receives research question
+            </div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">
+                <strong>2. Orchestrator</strong> → Initializes ResearchState and starts workflow
+            </div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">
+                <strong>3. Validate Query Agent</strong> → Fast path keyword check OR LLM validation (Llama-3.2-3B)
+            </div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">
+                <strong>4. Retriever Agent</strong> → Parallel search: Local KB (1.5s) + PubMed (2.5s) → Top-3 each
+            </div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">
+                <strong>5. Critical Analysis Agent</strong> → Synthesize evidence using Llama-3.1-70B
+            </div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">
+                <strong>6. Report Builder Agent</strong> → Generate Markdown report using Llama-3.1-70B
+            </div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">
+                <strong>7. Results Display</strong> → Show report + retrieved documents + matching sections
+            </div>
+        </div>
+        
+        <!-- Performance Metrics -->
+        <div class="flow-section">
+            <h2>⚡ Performance Metrics</h2>
+            <div class="metrics">
+                <div class="metric-card">
+                    <div class="metric-value">3-5s</div>
+                    <div class="metric-label">End-to-End Speed</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">&lt;1s</div>
+                    <div class="metric-label">Fast Path Validation</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">Top-3</div>
+                    <div class="metric-label">Results Per Source</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">1000</div>
+                    <div class="metric-label">Token Chunk Size</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">384</div>
+                    <div class="metric-label">Embedding Dimension</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">Cached</div>
+                    <div class="metric-label">Embedding Model</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Tech Stack -->
+        <div class="tech-stack">
+            <h2>📊 Tech Stack Summary</h2>
+            <table>
+                <tr>
+                    <th>Category</th>
+                    <th>Technology</th>
+                    <th>Details</th>
+                </tr>
+                <tr>
+                    <td><strong>Frontend</strong></td>
+                    <td>Streamlit</td>
+                    <td>Web UI, file upload, real-time display</td>
+                </tr>
+                <tr>
+                    <td><strong>Backend</strong></td>
+                    <td>Python 3.11-3.13</td>
+                    <td>Core application logic</td>
+                </tr>
+                <tr>
+                    <td><strong>Orchestration</strong></td>
+                    <td>LangGraph</td>
+                    <td>Workflow state machine</td>
+                </tr>
+                <tr>
+                    <td><strong>LLM Provider</strong></td>
+                    <td>OpenRouter</td>
+                    <td>Llama-3.2-3B, Llama-3.1-70B</td>
+                </tr>
+                <tr>
+                    <td><strong>Vector Database</strong></td>
+                    <td>ChromaDB</td>
+                    <td>Persistent vector storage</td>
+                </tr>
+                <tr>
+                    <td><strong>Embeddings</strong></td>
+                    <td>sentence-transformers</td>
+                    <td>all-MiniLM-L6-v2 (384 dim)</td>
+                </tr>
+                <tr>
+                    <td><strong>External APIs</strong></td>
+                    <td>PubMed</td>
+                    <td>NCBI E-utilities (Bio.Entrez)</td>
+                </tr>
+                <tr>
+                    <td><strong>Observability</strong></td>
+                    <td>LangSmith</td>
+                    <td>Tracing, monitoring, debugging</td>
+                </tr>
+                <tr>
+                    <td><strong>Configuration</strong></td>
+                    <td>Pydantic Settings</td>
+                    <td>Type-safe environment variables</td>
+                </tr>
+                <tr>
+                    <td><strong>Processing</strong></td>
+                    <td>pypdf, httpx, biopython</td>
+                    <td>Document & API handling</td>
+                </tr>
+                <tr>
+                    <td><strong>Logging</strong></td>
+                    <td>Loguru</td>
+                    <td>Structured logging</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
+

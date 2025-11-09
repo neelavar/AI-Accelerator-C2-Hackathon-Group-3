@@ -52,9 +52,25 @@ class ResearchOrchestrator:
         workflow.add_node("analyze_documents", self.analysis_agent)
         workflow.add_node("build_report", self.report_agent)
         
-        # Define the workflow edges (sequential pipeline)
+        # Define the workflow edges (sequential pipeline with early exit)
         workflow.set_entry_point("validate_query")
-        workflow.add_edge("validate_query", "retrieve_documents")
+        
+        # Add conditional edge from validation - exit early if validation fails
+        def check_validation(state):
+            """Check if validation succeeded."""
+            if state.get("current_stage") == "validation_failed":
+                return END
+            return "retrieve_documents"
+        
+        workflow.add_conditional_edges(
+            "validate_query",
+            check_validation,
+            {
+                END: END,
+                "retrieve_documents": "retrieve_documents"
+            }
+        )
+        
         workflow.add_edge("retrieve_documents", "analyze_documents")
         workflow.add_edge("analyze_documents", "build_report")
         workflow.add_edge("build_report", END)
@@ -68,6 +84,7 @@ class ResearchOrchestrator:
     def run_research(
         self,
         research_topic: str,
+        search_scope: str = "local_and_pubmed",
         config: RunnableConfig = None
     ) -> Dict[str, Any]:
         """
@@ -75,17 +92,19 @@ class ResearchOrchestrator:
         
         Args:
             research_topic: The research question/topic
+            search_scope: Where to search (local_only, local_and_pubmed, pubmed_only)
             config: Optional LangChain config (for callbacks)
             
         Returns:
             Final state with research report
         """
-        logger.info(f"Starting research workflow for: '{research_topic}'")
+        logger.info(f"Starting research workflow for: '{research_topic}' (scope: {search_scope})")
         start_time = time.time()
         
         # Initialize state
         initial_state: ResearchState = {
             "research_topic": research_topic,
+            "search_scope": search_scope,
             "query_validation": None,
             "refined_query": None,
             "retrieval_result": None,

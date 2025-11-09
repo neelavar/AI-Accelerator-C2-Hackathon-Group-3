@@ -35,7 +35,7 @@ class Settings(BaseSettings):
     )
     llm_temperature: float = Field(default=0.7, ge=0.0, le=2.0)
     llm_max_tokens: int = Field(default=4000, ge=100, le=100000)
-    llm_timeout_seconds: int = Field(default=30, ge=5, le=300)
+    llm_timeout_seconds: int = Field(default=15, ge=5, le=300)  # REDUCED for speed
 
     # ========================================================================
     # LangSmith (Optional tracing)
@@ -83,15 +83,15 @@ class Settings(BaseSettings):
     # ========================================================================
     # Document Processing
     # ========================================================================
-    chunk_size: int = Field(default=500, ge=100, le=2000)
-    chunk_overlap: int = Field(default=100, ge=0, le=500)
+    chunk_size: int = Field(default=1000, ge=100, le=2000)  # INCREASED for fewer chunks
+    chunk_overlap: int = Field(default=150, ge=0, le=500)
     max_document_size_mb: int = Field(default=50, ge=1, le=500)
 
     # ========================================================================
     # RAG Settings
     # ========================================================================
-    top_k_results: int = Field(default=20, ge=1, le=100)
-    similarity_threshold: float = Field(default=0.4, ge=0.0, le=1.0)
+    top_k_results: int = Field(default=5, ge=1, le=100)  # REDUCED for faster search
+    similarity_threshold: float = Field(default=0.3, ge=0.0, le=1.0)  # LOWERED for more results
     rerank_enabled: bool = True
 
     @field_validator("chunk_overlap")

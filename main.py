@@ -227,25 +227,205 @@ def section_knowledge_base():
                 st.write(f"✓ {Path(file_path).name}")
 
 
+def section_document_manager():
+    """Render the document management section with preview and chunks."""
+    st.header("📚 Document Manager")
+    st.caption("View, preview, and explore your indexed documents and chunks")
+    
+    try:
+        from mediscout.knowledge_base import KnowledgeBase
+        kb = KnowledgeBase()
+        
+        # Get all documents
+        documents = kb.get_all_documents()
+        
+        if not documents:
+            st.info("📭 No documents indexed yet. Upload and index documents in the Research Workflow tab first.")
+            return
+        
+        st.success(f"📊 **{len(documents)} documents indexed** with {kb.get_collection_stats()['total_chunks']} total chunks")
+        
+        # Document selector
+        doc_options = {doc['filename']: doc for doc in documents}
+        selected_filename = st.selectbox(
+            "Select a document to view",
+            options=list(doc_options.keys()),
+            help="Choose a document to preview its contents and chunks"
+        )
+        
+        if selected_filename:
+            selected_doc = doc_options[selected_filename]
+            doc_id = selected_doc['document_id']
+            chunk_count = selected_doc['chunk_count']
+            
+            st.divider()
+            
+            # Document info
+            col1, col2, col3 = st.columns(3)
+            with col1:
+                st.metric("Document ID", doc_id[:12] + "...")
+            with col2:
+                st.metric("Total Chunks", chunk_count)
+            with col3:
+                st.metric("Filename", selected_filename)
+            
+            # Get chunks
+            chunks = kb.get_document_chunks(doc_id)
+            
+            if not chunks:
+                st.warning("No chunks found for this document.")
+                return
+            
+            # View mode selector
+            view_mode = st.radio(
+                "View Mode",
+                options=["preview", "chunks", "search"],
+                format_func=lambda x: {
+                    "preview": "📄 Full Preview (First 5 chunks)",
+                    "chunks": "🧩 All Chunks (Detailed)",
+                    "search": "🔍 Search Within Document"
+                }[x],
+                horizontal=True
+            )
+            
+            if view_mode == "preview":
+                st.subheader("📄 Document Preview")
+                st.caption("Showing first 5 chunks to preview the document")
+                
+                preview_chunks = chunks[:5]
+                for chunk in preview_chunks:
+                    with st.expander(f"Chunk {chunk['chunk_index'] + 1} of {chunk_count}", expanded=False):
+                        st.text_area(
+                            "Content",
+                            value=chunk['content'],
+                            height=150,
+                            key=f"preview_{chunk['chunk_id']}",
+                            disabled=True
+                        )
+                
+                if len(chunks) > 5:
+                    st.info(f"💡 Showing 5 of {len(chunks)} chunks. Switch to 'All Chunks' view to see everything.")
+            
+            elif view_mode == "chunks":
+                st.subheader("🧩 All Document Chunks")
+                st.caption(f"Viewing all {len(chunks)} chunks")
+                
+                # Pagination
+                chunks_per_page = 10
+                total_pages = (len(chunks) + chunks_per_page - 1) // chunks_per_page
+                
+                page = st.selectbox(
+                    "Page",
+                    options=list(range(1, total_pages + 1)),
+                    format_func=lambda x: f"Page {x} of {total_pages}"
+                )
+                
+                start_idx = (page - 1) * chunks_per_page
+                end_idx = min(start_idx + chunks_per_page, len(chunks))
+                page_chunks = chunks[start_idx:end_idx]
+                
+                for chunk in page_chunks:
+                    with st.expander(f"📄 Chunk {chunk['chunk_index'] + 1}", expanded=False):
+                        st.markdown(f"**Chunk ID:** `{chunk['chunk_id']}`")
+                        st.markdown(f"**Size:** {len(chunk['content'])} characters")
+                        st.text_area(
+                            "Content",
+                            value=chunk['content'],
+                            height=200,
+                            key=f"chunk_{chunk['chunk_id']}",
+                            disabled=True
+                        )
+            
+            elif view_mode == "search":
+                st.subheader("🔍 Search Within This Document")
+                
+                search_query = st.text_input(
+                    "Search Query",
+                    placeholder="Enter keywords to search in this document...",
+                    help="Find specific sections or concepts within this document"
+                )
+                
+                if search_query:
+                    # Simple keyword search through chunks
+                    matching_chunks = []
+                    for chunk in chunks:
+                        if search_query.lower() in chunk['content'].lower():
+                            matching_chunks.append(chunk)
+                    
+                    if matching_chunks:
+                        st.success(f"✅ Found {len(matching_chunks)} matching chunks")
+                        
+                        for chunk in matching_chunks:
+                            with st.expander(f"🎯 Chunk {chunk['chunk_index'] + 1} - Match Found", expanded=True):
+                                # Highlight matching text
+                                content = chunk['content']
+                                # Simple highlight by showing context
+                                query_pos = content.lower().find(search_query.lower())
+                                if query_pos >= 0:
+                                    start = max(0, query_pos - 100)
+                                    end = min(len(content), query_pos + len(search_query) + 100)
+                                    context = content[start:end]
+                                    
+                                    st.markdown(f"**Match Context:**")
+                                    st.markdown(f"...{context}...")
+                                    st.divider()
+                                
+                                st.text_area(
+                                    "Full Content",
+                                    value=content,
+                                    height=150,
+                                    key=f"search_{chunk['chunk_id']}",
+                                    disabled=True
+                                )
+                    else:
+                        st.warning(f"No matches found for '{search_query}'")
+    
+    except Exception as e:
+        st.error(f"❌ Error loading documents: {e}")
+        logger.exception("Document manager error")
+
+
 def section_research():
     """Render the research execution section."""
     st.header("🔬 Step 2: Conduct Research")
     st.caption("Enter your research question and let MediScout analyze the literature")
     
-    col1, col2 = st.columns([4, 1])
+    # Research topic input
+    research_topic = st.text_area(
+        "Research Topic",
+        placeholder="e.g., Efficacy of metformin for type 2 diabetes prevention",
+        height=100,
+        help="Enter a specific medical research question"
+    )
+    
+    # Search scope options - IMPROVED
+    col1, col2 = st.columns([3, 1])
     
     with col1:
-        research_topic = st.text_area(
-            "Research Topic",
-            placeholder="e.g., Efficacy of metformin for type 2 diabetes prevention",
-            height=100,
-            help="Enter a specific medical research question"
+        search_scope = st.radio(
+            "Choose Your Search Sources:",
+            options=["pubmed_only", "local_and_pubmed", "local_only"],
+            format_func=lambda x: {
+                "pubmed_only": "🌐 PubMed Only - Latest published medical research (Recommended)",
+                "local_and_pubmed": "🔬 Both Local + PubMed - Comprehensive search (Slower)",
+                "local_only": "📁 Local Documents Only - Your uploaded files (Fast)"
+            }[x],
+            index=0,  # Default to PubMed only
+            help="PubMed searches millions of medical articles. Local search uses your uploaded documents."
         )
     
     with col2:
         st.write("")  # Spacing
         st.write("")  # Spacing
         generate_button = st.button("🚀 Generate Report", use_container_width=True, type="primary")
+    
+    # Show clear info based on search scope
+    if search_scope == "local_only":
+        st.warning("⚡ **Searching Your Uploads Only** - Make sure you've uploaded relevant PDFs in Step 1. No external sources will be used.")
+    elif search_scope == "pubmed_only":
+        st.success("🌐 **Searching PubMed Database** - Will search millions of published medical articles. Expected time: ~10-13 seconds.")
+    else:
+        st.info("🔍 **Comprehensive Search** - Will search both your local documents AND PubMed. Expected time: ~12-15 seconds.")
     
     if generate_button and research_topic:
         orchestrator = load_orchestrator()
@@ -267,6 +447,7 @@ def section_research():
             with st.spinner("🔄 Running research workflow..."):
                 final_state = orchestrator.run_research(
                     research_topic=research_topic,
+                    search_scope=search_scope,
                     config=config
                 )
             
@@ -299,6 +480,74 @@ def section_research():
                     mime="text/markdown",
                     use_container_width=True
                 )
+                
+                # Show retrieved documents with matching sections - IMPROVED
+                st.divider()
+                retrieved_docs = final_state.get('retrieved_documents', [])
+                if retrieved_docs:
+                    # Separate by source type
+                    local_docs = [d for d in retrieved_docs if d.source == "user"]
+                    pubmed_docs = [d for d in retrieved_docs if d.source == "pubmed"]
+                    
+                    st.subheader(f"📚 Retrieved Sources ({len(retrieved_docs)} total)")
+                    
+                    # Summary
+                    col1, col2, col3 = st.columns(3)
+                    with col1:
+                        st.metric("Total Sources", len(retrieved_docs))
+                    with col2:
+                        st.metric("Local Documents", len(local_docs))
+                    with col3:
+                        st.metric("PubMed Articles", len(pubmed_docs))
+                    
+                    st.divider()
+                    
+                    # Show PubMed articles first (more prominent)
+                    if pubmed_docs:
+                        st.markdown("### 🌐 PubMed Articles (External Research)")
+                        for i, doc in enumerate(pubmed_docs, 1):
+                            with st.expander(f"📄 Article {i}: {doc.title}", expanded=(i==1)):
+                                # Citation info
+                                st.markdown(f"**Title:** {doc.title}")
+                                if doc.metadata:
+                                    if doc.metadata.get('authors'):
+                                        st.markdown(f"**Authors:** {doc.metadata['authors']}")
+                                    if doc.metadata.get('journal'):
+                                        st.markdown(f"**Journal:** {doc.metadata['journal']}")
+                                    if doc.metadata.get('pub_date'):
+                                        st.markdown(f"**Published:** {doc.metadata['pub_date']}")
+                                    if doc.metadata.get('pmid'):
+                                        st.markdown(f"**PMID:** [{doc.metadata['pmid']}](https://pubmed.ncbi.nlm.nih.gov/{doc.metadata['pmid']}/)")
+                                
+                                st.markdown(f"**Relevance Score:** {doc.relevance_score:.2%}")
+                                
+                                st.markdown("**Abstract:**")
+                                st.text_area(
+                                    "Content",
+                                    value=doc.content[:2000] + ("..." if len(doc.content) > 2000 else ""),
+                                    height=200,
+                                    key=f"pubmed_{i}_{doc.id}",
+                                    disabled=True,
+                                    label_visibility="collapsed"
+                                )
+                    
+                    # Show local documents
+                    if local_docs:
+                        st.markdown("### 📁 Local Knowledge Base Documents")
+                        for i, doc in enumerate(local_docs, 1):
+                            with st.expander(f"📄 Document {i}: {doc.title}", expanded=(i==1 and not pubmed_docs)):
+                                st.markdown(f"**Source:** {doc.title}")
+                                st.markdown(f"**Relevance Score:** {doc.relevance_score:.2%}")
+                                
+                                st.markdown("**Matching Section:**")
+                                st.text_area(
+                                    "Content",
+                                    value=doc.content[:1500] + ("..." if len(doc.content) > 1500 else ""),
+                                    height=200,
+                                    key=f"local_{i}_{doc.id}",
+                                    disabled=True,
+                                    label_visibility="collapsed"
+                                )
         
         except Exception as e:
             st.error(f"❌ An error occurred: {e}")
@@ -320,7 +569,7 @@ def main():
     sidebar_setup()
     
     # Main content
-    tab1, tab2 = st.tabs(["🏠 Research Workflow", "📖 User Guide"])
+    tab1, tab2, tab3 = st.tabs(["🏠 Research Workflow", "📚 Document Manager", "📖 User Guide"])
     
     with tab1:
         section_knowledge_base()
@@ -328,6 +577,9 @@ def main():
         section_research()
     
     with tab2:
+        section_document_manager()
+    
+    with tab3:
         st.markdown("""
         ## 📖 How to Use MediScout
         
