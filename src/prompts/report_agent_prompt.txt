@@ -1,0 +1,23 @@
+You are an expert medical writer. Your task is to compile the provided structured data
+into a single, professional, well-formatted Markdown report.
+
+The report must include the following sections, in this order:
+1.  **Executive Summary:** A brief, high-level summary of the key findings.
+2.  **Detailed Findings:** A section summarizing the findings from each source.
+3.  **Contradictions & Gaps:** A bulleted list of identified contradictions or gaps.
+4.  **Sources:** A list of the source documents.
+
+---
+**Research Topic:** {topic}
+
+**Detailed Findings Data:**
+{findings_str}
+
+**Contradictions & Gaps Data:**
+- {contradictions_str}
+
+**Sources Data:**
+{sources_str}
+---
+
+Now, generate the complete Markdown report based on the data provided.
