@@ -3,7 +3,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.document_loaders import PyPDFLoader, TextLoader
 import chromadb
 from chromadb.config import Settings
-from src.config import EMBEDDING_MODEL, llm_client
+from src.config import EMBEDDING_MODEL, llm_client, APP_ENV
 
 DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "data", "chromadb")
 
@@ -27,10 +27,29 @@ def load_and_chunk_document(file_path):
 def embed_texts(texts):
     """
     Generate embeddings for a list of texts using the configured embedding model.
+    Uses Ollama in DEV mode and Openrouter in DEMO mode, based on APP_ENV.
     Returns a list of embeddings.
     """
-    response = llm_client.embeddings.create(model=EMBEDDING_MODEL, input=texts)
-    return [r.embedding for r in response.data]
+    app_env = os.getenv("APP_ENV", "DEV")
+    if app_env.upper() == "DEV":
+        # Use Ollama embedding endpoint, sending one request per text
+        import requests
+        ollama_url = "http://localhost:11434/api/embeddings"
+        embeddings = []
+        for text in texts:
+            response = requests.post(ollama_url, json={"model": EMBEDDING_MODEL, "prompt": text})
+            response.raise_for_status()
+            data = response.json()
+            # Ollama returns embedding in 'embedding' key
+            emb = data.get("embedding", [])
+            embeddings.append(emb)
+        return embeddings
+    elif app_env.upper() == "DEMO":
+        # Use Openrouter via llm_client
+        response = llm_client.embeddings.create(model=EMBEDDING_MODEL, input=texts)
+        return [r.embedding for r in response.data]
+    else:
+        raise ValueError(f"Unknown APP_ENV: {app_env}. Supported: DEV (Ollama), DEMO (Openrouter)")
 
 def ingest_document(file_path):
     """
